@@ -76,10 +76,10 @@
 
         #shieldScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; color: white; text-align: center; font-size: 20px; padding-top: 20%; }
 
-        /* واجهة الأستاذ المطور المقسومة */
-        .dev-split-container { display: flex; width: 100%; height: 100vh; height: 100dvh; background: #f4f7f5; }
-        .dev-panel-left { width: 55%; padding: 15px; overflow-y: auto; box-sizing: border-box; border-left: 2px solid #cbd5e0; background: white; }
-        .dev-preview-right { width: 45%; height: 100%; display: flex; flex-direction: column; background: var(--chat-bg); box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+        /* تعديل واجهة الأستاذ المطور لتصبح كاملة الشاشة ومريحة جداً للهواتف والتابلت دون تقسيم مشوه */
+        .dev-fullscreen-container { display: flex; width: 100%; height: 100vh; height: 100dvh; background: #f4f7f5; position: relative; }
+        .dev-panel-main { width: 100%; height: 100%; padding: 15px; overflow-y: auto; box-sizing: border-box; background: white; display: block; }
+        .dev-preview-modal { width: 100%; height: 100%; display: none; flex-direction: column; background: var(--chat-bg); position: absolute; top: 0; left: 0; z-index: 9999; }
     </style>
 </head>
 <body oncontextmenu="return false;" oncopy="return false;" oncut="return false;">
@@ -137,12 +137,16 @@
     </div>
 </div>
 
-<!-- واجهة الأستاذ المطور الضيف المقسومة والمستقلة بالكامل -->
-<div id="developerApp" class="dev-split-container" style="display:none;">
-    <div class="dev-panel-left">
+<!-- واجهة الأستاذ المطور المحدثة: تظهر بالكامل وبشكل مريح ومنسق للشاشات والهواتف -->
+<div id="developerApp" class="dev-fullscreen-container" style="display:none;">
+    <!-- الصفحة الرئيسية لتطوير المحتوى وبناء الأزرار والشجرة -->
+    <div id="devPanelMain" class="dev-panel-main">
         <h2 style="color: var(--primary-color); border-bottom: 2px solid #cbd5e0; padding-bottom: 8px; margin-top:0;">🛠️ لوحة تطوير مادة: <span id="devSubjectTitle" style="color:var(--secondary-color);">...</span></h2>
-        <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:6px 12px; border-radius:6px; float:left; cursor:pointer; font-weight:bold;">خروج 🔒</button>
-        <div style="clear:both; height:10px;"></div>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button onclick="switchToDevPreviewMode()" style="background:var(--secondary-color); color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; flex: 1; font-size:14px; box-shadow:0 3px 6px rgba(0,0,0,0.1);">👁️ تجربة ومعاينة البوت</button>
+            <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px;">خروج 🔒</button>
+        </div>
         
         <div class="card">
             <label style="font-weight:bold; color: var(--secondary-color);">🤖 اسم البوت المخصص:</label>
@@ -157,10 +161,11 @@
             <button onclick="addNodeAtCurrentDevLevel()" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر جديد في هذا المستوى</button>
         </div>
 
-        <button onclick="saveDevDataOnly()" class="btn-prime" style="width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32);">💾 حفظ وتثبيت تعديلات المادة الحالية فقط</button>
+        <button onclick="saveDevDataOnly()" class="btn-prime" style="width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32); padding: 14px; font-size: 16px;">💾 حفظ وتثبيت تعديلات المادة الحالية فقط</button>
     </div>
     
-    <div class="dev-preview-right">
+    <!-- صفحة تجريب الشات المنفصلة تظهر بملء الشاشة عند طلب المعاينة -->
+    <div id="devPreviewModal" class="dev-preview-modal">
         <div class="chat-screen">
             <div class="app-header" style="background: var(--secondary-color);">
                 <div class="robot-head">
@@ -170,7 +175,10 @@
                         <span class="robot-status">● وضع المعاينة والتطوير النشط</span>
                     </div>
                 </div>
-                <button onclick="refreshDevChatPreview()" class="btn-back" style="background:rgba(0,0,0,0.3);">🔄 تحديث وتجربة المحادثة الآن</button>
+                <div style="display:flex; gap:6px;">
+                    <button onclick="refreshDevChatPreview()" class="btn-back" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4);">🔄 تصفير</button>
+                    <button onclick="closeDevPreviewMode()" class="btn-back" style="background:#d32f2f; border:none;">🔙 رجوع للوحة</button>
+                </div>
             </div>
             <div class="chat-box" id="devChatContainer"></div>
             <div class="options-area" id="devOptionsContainer"></div>
@@ -578,6 +586,7 @@
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام للموقع بالكامل!");
     }
 
+    /* دوال إدارة واجهة الأستاذ المطور الفردية الكاملة وبدون تقسيم شاشة */
     function getDevCurrentLevel() {
         if(!academyData[sessionDevSubject]) return [];
         let level = academyData[sessionDevSubject].tree; devCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
@@ -589,7 +598,6 @@
         document.getElementById('devRobotName').value = academyData[sessionDevSubject] ? academyData[sessionDevSubject].robotName : "";
         document.getElementById('devWelcome').value = academyData[sessionDevSubject] ? academyData[sessionDevSubject].welcome : "";
         renderDevTree();
-        refreshDevChatPreview();
     }
 
     function renderDevTree() {
@@ -632,7 +640,20 @@
         }
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
         alert("💾 تم حفظ وتثبيت تعديلات مادتك فقط في قاعدة البيانات الموحدة بنجاح!");
+    }
+
+    /* الانتقال إلى وضع المعاينة بملء الشاشة تلبية لطلبك */
+    function switchToDevPreviewMode() {
+        if(!checkDevTokenValidity()) return;
+        document.getElementById('devPanelMain').style.display = 'none';
+        document.getElementById('devPreviewModal').style.display = 'flex';
         refreshDevChatPreview();
+    }
+
+    /* العودة مجدداً للوحة التطوير */
+    function closeDevPreviewMode() {
+        document.getElementById('devPreviewModal').style.display = 'none';
+        document.getElementById('devPanelMain').style.display = 'block';
     }
 
     function refreshDevChatPreview() {
