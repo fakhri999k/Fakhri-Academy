@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -244,7 +244,7 @@
         globalMessage: "أعزائي التلاميذ، يرجى تصفح المحاور والدروس عبر الفلاتر الذكية بداخل كل مراجعة. بالتوفيق لكم!",
         subjectsOrder: ['philosophy', 'arabic'],
         usedCodes: [],
-        devCodes: { philosophy: "DEV-PHILOSOPHY-7712", arabic: "DEV-ARABIC-4921" }, // أكواد الأساتذة المطورين
+        devCodes: { philosophy: "DEV-PHILOSOPHY-7712", arabic: "DEV-ARABIC-4921" }, 
         philosophy: {
             robotName: "المساعد الفلسفي الذكي 🧠",
             welcome: "مرحباً بك في فضاء الفلسفة. تصفح المحاور العامة بالأسفل للوصول للملخصات والكويزات.",
@@ -258,7 +258,7 @@
     let adminCurrentPathIndices = []; 
     let devCurrentPathIndices = [];
     let activeSubject = 'philosophy';
-    let sessionDevSubject = ''; // لتحديد أي بوت يفتحه الأستاذ الضيف
+    let sessionDevSubject = ''; 
 
     function unlockAudioContext() {
         ['soundClick', 'soundMsgBot', 'soundQuizCorrect', 'soundQuizWrong'].forEach(id => {
@@ -295,10 +295,9 @@
                 loadSubjectData(); 
             } else if(sessionAuth === 'developer') {
                 sessionDevSubject = sessionStorage.getItem('fakhri_dev_active_subject');
-                // فحص الطرد الفوري قبل التحميل
                 const activeDevCode = sessionStorage.getItem('fakhri_dev_logged_code');
                 if(academyData.devCodes[sessionDevSubject] !== activeDevCode) {
-                    handle طردالأستاذ();
+                    handleDevExpulsion();
                     return;
                 }
                 document.getElementById('developerApp').style.display = 'flex';
@@ -330,7 +329,6 @@
         academyData[rawId] = { robotName: name, welcome: `مرحباً بك في المساعد الآلي لـ (${name})`, tree: [] };
         academyData.subjectsOrder.push(rawId);
         
-        // توليد كود تطوير تلقائي للأستاذ الجديد
         const rand = Math.floor(1000 + Math.random() * 9000);
         academyData.devCodes[rawId] = `DEV-${rawId.toUpperCase()}-${rand}`;
         
@@ -344,7 +342,6 @@
         alert("🟢 تم إضافة وتفعيل المادة وإنشاء رمز الأستاذ المطور بنجاح!");
     }
 
-    // إدارة وتحديث وعرض أكواد الأساتذة المطورين مع أزرار التصفير
     function renderDevCodesManagerUI() {
         const container = document.getElementById('devCodesManagementContainer');
         if(!container) return;
@@ -365,7 +362,7 @@
         academyData.devCodes[sub] = `DEV-${sub.toUpperCase()}-${rand}`;
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
         renderDevCodesManagerUI();
-        alert("🔄 تم إتلاف الرمز السابق وتوليد رمز جديد صالح فوراً! أي عملية حفظ قادمة للأستاذ المطرود ستفشل تلقائياً.");
+        alert("🔄 تم إتلاف الرمز السابق وتوليد رمز جديد صالح فوراً!");
     }
 
     function generateNewStudentCode() {
@@ -420,7 +417,6 @@
             return;
         }
 
-        // فحص محاولة دخول أستاذ مطور ضيف عبر الأكواد المخصصة للمواد
         let foundSub = null;
         for(let sub in academyData.devCodes) {
             if(academyData.devCodes[sub] === code) { foundSub = sub; break; }
@@ -443,7 +439,7 @@
         location.reload(); 
     }
 
-    function handleطردالأستاذ() {
+    function handleDevExpulsion() {
         sessionStorage.clear();
         document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; box-sizing:border-box; font-family:sans-serif;">
             <div style="font-size:60px; margin-bottom:20px;">⚠️</div>
@@ -457,7 +453,7 @@
         const currentSavedCode = academyData.devCodes[sessionDevSubject];
         const activeDevCode = sessionStorage.getItem('fakhri_dev_logged_code');
         if(currentSavedCode !== activeDevCode) {
-            handleطردالأستاذ();
+            handleDevExpulsion();
             return false;
         }
         return true;
@@ -533,7 +529,6 @@
 
     function execEditorCmd(cmd, value = null) { document.execCommand(cmd, false, value); }
 
-    // ----------- آليات إدارة وتحرير المدير فخري -----------
     function getAdminCurrentLevel() {
         const sub = document.getElementById('admSubject').value; if(!academyData[sub]) return [];
         let level = academyData[sub].tree; adminCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
@@ -583,8 +578,6 @@
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام للموقع بالكامل!");
     }
 
-
-    // ----------- واجهة ومميزات الأستاذ المطور الضيف (نفس الخصائص والشكل تلوين الشجر) -----------
     function getDevCurrentLevel() {
         if(!academyData[sessionDevSubject]) return [];
         let level = academyData[sessionDevSubject].tree; devCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
@@ -642,7 +635,6 @@
         refreshDevChatPreview();
     }
 
-    // شاشة معاينة المحادثة المستهدفة المباشرة للأستاذ المطور
     function refreshDevChatPreview() {
         if(!checkDevTokenValidity()) return;
         devCurrentPath = [];
@@ -704,4 +696,3 @@
 </script>
 </body>
 </html>
-                                     
