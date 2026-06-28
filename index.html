@@ -1,0 +1,518 @@
+    <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>أكاديمية فخري الرقمية - التحديث الفوري المزامَن</title>
+    <style>
+        :root {
+            --primary-color: #1b4d3e;      
+            --secondary-color: #2e7d32;    
+            --accent-green: #00ff66;       
+            --bg-color: #f4f7f5;
+            --chat-bg: #eef2ef;
+            --text-color: #2d3748;
+        }
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; -webkit-user-select: none; user-select: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); }
+        input, textarea, select { -webkit-user-select: text !important; user-select: text !important; box-sizing: border-box; }
+        
+        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; text-align: center; }
+        .login-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1596700810795-3642c26f047f?w=1200'); background-size: cover; background-position: center; opacity: 0.65; filter: blur(1px); }
+        .login-content { position: relative; z-index: 10; color: white; background: rgba(27, 77, 62, 0.75); padding: 35px; border-radius: 16px; backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; }
+        
+        .login-title { font-size: 28px; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 10px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .btn-prime { background: linear-gradient(135deg, #2e7d32, #43a047); color: white; border: none; padding: 14px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.2s; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        .btn-prime:hover { background: linear-gradient(135deg, #1b5e20, #2e7d32); }
+        .input-field { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #a5d6a7; border-radius: 8px; text-align: center; font-size: 16px; background: rgba(255,255,255,0.95); color: #2d3748; font-weight: bold; }
+        
+        .app-container { max-width: 600px; margin: 0 auto; height: 100vh; height: 100dvh; display: flex; flex-direction: column; background: var(--chat-bg); box-shadow: 0 0 20px rgba(0,0,0,0.15); position: relative; }
+        
+        .hub-screen { display: flex; flex-direction: column; height: 100%; background: #f4f7f5; overflow-y: auto; }
+        .hub-header { background: linear-gradient(135deg, var(--primary-color), #2e7d32); color: white; padding: 20px 15px; text-align: center; font-size: 19px; font-weight: bold; position: relative; }
+        .btn-logout-top { position: absolute; left: 10px; top: 18px; background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; }
+        
+        .global-announcement { background: #e8f5e9; border-right: 4px solid var(--secondary-color); padding: 15px; margin: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; color: #1b5e20; font-weight: 500; }
+        .bots-list { padding: 0 15px 20px 15px; display: flex; flex-direction: column; gap: 16px; }
+        
+        .bot-card { background: rgba(232, 245, 233, 0.75); border: 2px solid var(--accent-green); box-shadow: 0 0 12px rgba(0, 255, 102, 0.4); border-radius: 12px; padding: 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease-in-out; backdrop-filter: blur(4px); }
+        .bot-card:hover { box-shadow: 0 0 20px rgba(0, 255, 102, 0.8); transform: translateY(-2px); background: rgba(200, 230, 201, 0.9); }
+        .bot-card-name { font-size: 17px; font-weight: bold; color: #1b4d3e; }
+        .bot-card-status { font-size:12px; color: #00cc52; margin-top:2px; font-weight:bold; text-shadow: 0 0 4px rgba(0,255,102,0.4); }
+
+        .chat-screen { display: none; flex-direction: column; height: 100%; background: white; overflow: hidden; }
+        .app-header { background: var(--primary-color); color: white; padding: 12px 15px; font-size: 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--secondary-color); flex-shrink: 0; }
+        
+        .chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; background: #ffffff; }
+        
+        /* 🔥 الهيكلة الثابتة والمصلحة قسرياً لمنع الاختفاء والتعتيم في أندرويد وآيفون */
+        .options-area { 
+            padding: 15px 12px 25px 12px; 
+            background: #f0f4f1 !important; 
+            display: flex !important; 
+            flex-direction: row !important;
+            flex-wrap: nowrap !important; 
+            overflow-x: auto !important; 
+            overflow-y: hidden !important;
+            gap: 10px; 
+            justify-content: flex-start; 
+            align-items: center;
+            border-top: 2px solid #cbd5e0; 
+            flex-shrink: 0; 
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            box-sizing: border-box;
+            direction: rtl !important;
+            min-height: 75px;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        .opt-btn { 
+            background: #ffffff; 
+            color: var(--text-color); 
+            border: 2px solid #a5d6a7; 
+            padding: 10px 20px; 
+            border-radius: 24px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: bold; 
+            flex-shrink: 0 !important; 
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08); 
+            display: inline-block; 
+            white-space: nowrap;
+            transform: translateZ(0); /* تسريع عتادي لمنع تجميد المتصفحات */
+        }
+        .opt-btn.folder-btn { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .opt-btn.back-level-btn { background: #ffebee; border-color: #ffcdd2; color: #c62828; }
+        
+        .msg { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 15px; line-height: 1.6; animation: fadeIn 0.2s ease-out; word-wrap: break-word; }
+        .msg.bot { background: #f0f4f1; align-self: flex-start; border-top-left-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #2d3748; }
+        .msg.user { background: var(--secondary-color); color: white; align-self: flex-end; border-top-right-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        .gallery-container { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .gallery-container img { max-width: 100%; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .quiz-option-btn { display:block; width:100%; text-align:right; margin:6px 0; padding:12px; border:1px solid #c8e6c9; border-radius:8px; background:#fff; cursor:pointer; font-size:14px; }
+        
+        .admin-panel { padding: 15px; background: white; overflow-y: auto; height: 100vh; height: 100dvh; box-sizing: border-box; display: none; }
+        .admin-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; }
+        .card { background: #f4f7f5; padding: 15px; border: 1px solid #c8e6c9; border-radius: 12px; margin-bottom: 15px; }
+        
+        #shieldScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; color: white; text-align: center; font-size: 20px; padding-top: 20%; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body oncontextmenu="return false;" oncopy="return false;" oncut="return false;">
+
+<div id="shieldScreen">🔒 حماية المحتوى التعليمي مفعّلة بنجاح.</div>
+
+<audio id="soundClick" src="https://cdn.pixabay.com/audio/2022/03/24/audio_3d1f887b40.mp3" preload="auto"></audio>
+<audio id="soundMsgBot" src="https://cdn.pixabay.com/audio/2022/10/30/audio_55a15993e3.mp3" preload="auto"></audio>
+<audio id="soundQuizCorrect" src="https://cdn.pixabay.com/audio/2023/10/16/audio_097f53a5c1.mp3" preload="auto"></audio>
+<audio id="soundQuizWrong" src="https://cdn.pixabay.com/audio/2022/12/15/audio_5f4f89d6e4.mp3" preload="auto"></audio>
+
+<!-- شاشة الدخول والتنبيه الصغير -->
+<div id="loginScreen" class="screen">
+    <div class="login-bg"></div>
+    <div class="login-content">
+        <div style="font-size: 40px; margin-bottom: 5px;">🎓</div>
+        <div class="login-title" id="loginHeaderTitle">أكاديمية أستاذ فخري الرقمية</div>
+        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;" id="loginHeaderDesc">مرحباً بك في المنصة الذكية الآمنة لتجربة تعليمية غامرة.</div>
+        
+        <div id="fingerprintArea" style="font-size:12px; color:#e8f5e9; background:rgba(255,255,255,0.15); padding:8px; border-radius:6px; margin-bottom:15px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1);">
+            ⚠️ تنبيه: الكود يستعمل لتفعيل حسابك الحالي فقط لمكافحة المشاركة السنوية المتكررة.
+        </div>
+        
+        <input type="password" id="accessCode" class="input-field" placeholder="أدخل كود المرور الخاص بك">
+        <button onclick="handleLogin()" class="btn-prime">فتح المنصة الآن</button>
+    </div>
+</div>
+
+<!-- واجهة الطالب -->
+<div id="studentApp" class="app-container" style="display:none;">
+    <div id="hubScreen" class="hub-screen">
+        <div class="hub-header" id="hubMainTitle">
+            أكاديمية أستاذ فخري التعليمية
+            <button class="btn-logout-top" onclick="logout()">🚪 خروج</button>
+        </div>
+        <div class="global-announcement" id="hubAnnouncement">...</div>
+        <div style="padding-right: 15px; font-weight: bold; font-size: 15px; margin-bottom: 8px; color: var(--primary-color);">🤖 اختر المساعد الذكي لبدء المراجعة:</div>
+        <div class="bots-list" id="botsContainerList"></div>
+    </div>
+
+    <div id="chatScreen" class="chat-screen">
+        <div class="app-header">
+            <div class="robot-head">
+                <span class="robot-icon">🤖</span>
+                <div>
+                    <span id="headerRobotName" class="robot-title-text">...</span>
+                    <span class="robot-status">● متصل ومستعد لمساعدتك</span>
+                </div>
+            </div>
+            <button onclick="backToHub()" class="btn-back">🔙 غلق المحادثة</button>
+        </div>
+        <div class="chat-box" id="chatContainer"></div>
+        <div class="options-area" id="optionsContainer"></div>
+    </div>
+</div>
+
+<!-- لوحة التحكم للأستاذ فخري -->
+<div id="adminPanel" class="admin-panel">
+    <h2 style="color: var(--primary-color); border-bottom: 2px solid #c8e6c9; padding-bottom: 8px;">⚙️ لوحة التحكم الأمنية والتحديث اللحظي المزامَن</h2>
+    <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:8px 15px; border-radius:6px; float:left; cursor:pointer; font-weight:bold;">قفل الحساب 🔒</button>
+    
+    <!-- 🔄 صندوق نظام ترحيل ومزامنة التحديثات على باقي الأجهزة والمنصات -->
+    <div class="card" style="border: 2px solid #0056b3; background: #e3f2fd;">
+        <label style="font-weight:bold; color:#0056b3; display:block; margin-bottom:5px;">🔄 التحديث اللحظي عبر الأجهزة (أندرويد / متصفحات أخرى):</label>
+        <p style="font-size:12px; margin:5px 0; color:#333;">بسبب الخصوصية، استخدم هذا الكود لنقل تحديثاتك فوراً لجهازك الأندرويد دون فقدان البيانات:</p>
+        <button onclick="exportSyncPayload()" style="background:#007bff; color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; width:100%; cursor:pointer;">📥 نسخ كود المزامنة اللحظية الشاملة</button>
+        <button onclick="importSyncPayload()" style="background:#4caf50; color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; width:100%; cursor:pointer; margin-top:8px;">📤 استقبال واستيراد التحديثات على هذا الجهاز</button>
+    </div>
+
+    <div class="card" style="border: 2px solid var(--secondary-color); background: #e8f5e9;">
+        <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🔑 نظام شيفرات دخول الطلاب ومكافحة التكرار السنوي:</label>
+        <div style="display:flex; gap:10px; margin-bottom: 10px;">
+            <input type="text" id="admStudentCode" class="admin-input" style="margin:0; font-weight:bold; text-align:center; color:var(--primary-color);" readonly>
+            <button onclick="generateNewStudentCodeWithYear()" style="background:var(--secondary-color); color:white; border:none; padding:0 15px; border-radius:8px; font-weight:bold; cursor:pointer; min-width: 130px;">توليد كود جديد 🔄</button>
+        </div>
+        <button onclick="archiveAndBlockCurrentCode()" style="background:#d32f2f; color:white; border:none; padding:8px 12px; border-radius:6px; font-weight:bold; width:100%; cursor:pointer; font-size:13px;">🔒 حظر وأرشفة هذا الكود نهائياً للسنوات القادمة</button>
+        <div style="font-size:11px; color:#718096; margin-top:6px; text-align:center;">الأكواد السنوية المحظورة قديماً: <span id="blockedCodesCount" style="font-weight:bold; color:#d32f2f;">0</span></div>
+    </div>
+
+    <div class="card" style="border: 2px solid #1b4d3e; background: #f0f4f1;">
+        <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🛠️ مسير المساعدين الآليين ومصنع المواد:</label>
+        <div style="display:flex; gap:10px; margin-bottom: 5px;">
+            <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة بالإنجليزي (مثل: history)" style="margin:0;">
+            <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: التاريخ 📜)" style="margin:0;">
+        </div>
+        <button onclick="addNewCustomBotSubject()" class="btn-prime" style="margin-top:5px; padding:10px;">➕ إنشاء وتفعيل البوت الجديد فوراً</button>
+    </div>
+
+    <div class="card">
+        <label style="font-weight:bold; color:var(--primary-color);">📢 نصوص الواجهة والرسالة العامة للأكاديمية:</label>
+        <input type="text" id="admLoginTitle" class="admin-input">
+        <input type="text" id="admLoginDesc" class="admin-input">
+        <textarea id="admGlobalMsg" class="admin-input" rows="2"></textarea>
+    </div>
+
+    <label style="font-weight:bold; display:block; margin-top:15px;">1. حدد البوت/المادة لتخصيص محتواها الشجري بالكامل:</label>
+    <select id="admSubject" class="admin-input" onchange="loadSubjectData()"></select>
+
+    <div class="card">
+        <label style="font-weight:bold; color: #2e7d32;">🤖 تخصيص اسم هذا البوت المحدد:</label>
+        <input type="text" id="admRobotName" class="admin-input">
+        <label style="font-weight:bold;">💬 رسالة ترحيب البوت المخصصة عند الفتح:</label>
+        <textarea id="admWelcome" class="admin-input" rows="2"></textarea>
+        <button onclick="deleteCurrentBotSubject()" style="background:#ffcdd2; color:#b71c1c; border:none; padding:6px 12px; border-radius:6px; margin-top:10px; font-weight:bold; cursor:pointer; width:100%;">🗑️ حذف هذا البوت بالكامل من الأكاديمية</button>
+    </div>
+
+    <div class="card" style="background: #eef2ef;">
+        <div style="font-weight:bold; margin-bottom:10px; color: var(--primary-color);" id="adminTreePath">🌳 هيكل أزرار البوت:</div>
+        <div id="treeAdminContainer"></div>
+        <button onclick="addNodeAtCurrentLevel()" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر (عام أو خاص) في هذا المستوى</button>
+    </div>
+
+    <button onclick="saveAdminData()" class="btn-prime" style="margin-bottom:30px; width:100%;">💾 حفظ ونشر كافة التعديلات فورا وتثبيتها للطلاب</button>
+</div>
+
+<script>
+    let academyData = {
+        login: { title: "أكاديمية أستاذ فخري الرقمية", desc: "مرحباً بك في المنصة الذكية الآمنة لتجربة تعليمية غامرة." },
+        studentAccessCode: "PROF-2026-X83B", 
+        blockedCodes: [], 
+        globalMessage: "أعزائي التلاميذ، يرجى تصفح المحاور والدروس عبر الفلاتر الذكية بداخل كل مراجعة. بالتوفيق لكم!",
+        subjectsOrder: ['philosophy', 'arabic'], 
+        philosophy: {
+            robotName: "المساعد الفلسفي الذكي 🧠",
+            welcome: "مرحباً بك في فضاء الفلسفة. تصفح المحاور العامة بالأسفل للوصول للملخصات والكويزات.",
+            tree: [{ title: "📂 مجزوءة الوضع البشري", type: "folder", children: [] }]
+        },
+        arabic: { robotName: "المساعد الأدبي واللغوي ✍️", welcome: "مرحباً بك في فضاء اللغة العربية المفتوح.", tree: [] }
+    };
+
+    let studentCurrentPath = []; 
+    let adminCurrentPathIndices = []; 
+    let activeSubject = 'philosophy';
+    let myFingerprint = "";
+
+    function unlockAudioContext() {
+        ['soundClick', 'soundMsgBot', 'soundQuizCorrect', 'soundQuizWrong'].forEach(id => {
+            const a = document.getElementById(id); a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
+        });
+    }
+
+    function playSound(soundId) { try { const s = document.getElementById(soundId); s.currentTime = 0; s.play(); } catch(e) {} }
+
+    function refreshDataFromStorage() {
+        const localData = localStorage.getItem('fakhri_annual_secure_db');
+        if(localData) { 
+            academyData = JSON.parse(localData); 
+            if(!academyData.blockedCodes) academyData.blockedCodes = []; 
+            if(!academyData.subjectsOrder) academyData.subjectsOrder = ['philosophy', 'arabic'];
+        }
+    }
+
+    window.onload = function() {
+        const specs = [navigator.userAgent, screen.height, screen.width, screen.colorDepth, navigator.language].join('||');
+        let hash = 0; for (let i = 0; i < specs.length; i++) { hash = (hash << 5) - hash + specs.charCodeAt(i); hash |= 0; }
+        myFingerprint = "FAKHRI-" + Math.abs(hash).toString(16).toUpperCase();
+        
+        refreshDataFromStorage();
+        
+        // التحقق التلقائي من وجود شحنة مزامنة بالرابط الفوري المستقبلي
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('sync')) {
+            try {
+                const dec = atob(urlParams.get('sync'));
+                localStorage.setItem('fakhri_annual_secure_db', dec);
+                alert("🔄 تم استقبال ومزامنة جميع تحديثات الأزرار والمسميات الجديدة فورا!");
+                window.history.replaceState({}, document.title, window.location.pathname);
+                refreshDataFromStorage();
+            }catch(e){}
+        }
+
+        document.getElementById('loginHeaderTitle').innerText = academyData.login.title;
+        document.getElementById('loginHeaderDesc').innerText = academyData.login.desc;
+        document.getElementById('admStudentCode').value = academyData.studentAccessCode;
+        document.getElementById('blockedCodesCount').innerText = academyData.blockedCodes.length;
+
+        const sessionAuth = sessionStorage.getItem('fakhri_authenticated_session');
+        if(sessionAuth) {
+            document.getElementById('loginScreen').style.display = 'none';
+            if(sessionAuth === 'admin') { document.getElementById('adminPanel').style.display = 'block'; buildAdminSelectOptions(); loadSubjectData(); } 
+            else { document.getElementById('studentApp').style.display = 'flex'; renderHubView(); }
+        }
+    }
+
+    function exportSyncPayload() {
+        const str = JSON.stringify(academyData);
+        const encoded = btoa(unescape(encodeURIComponent(str)));
+        navigator.clipboard.writeText(encoded);
+        alert("📥 تم نسخ كود المزامنة! افتح لوحة التحكم بجهازك الأندرويد واضغط على 'استقبال واستيراد التحديثات' والصقه هناك.");
+    }
+
+    function importSyncPayload() {
+        const txt = prompt("قم بلصق كود المزامنة المنسوخ من جهاز الآيفون هنا:");
+        if(!txt) return;
+        try {
+            const dec = decodeURIComponent(escape(atob(txt.trim())));
+            JSON.parse(dec); // فحص أمان البنية
+            localStorage.setItem('fakhri_annual_secure_db', dec);
+            alert("🎉 تم التحديث اللحظي لجميع الأجهزة والمنصات بنجاح تام وبأحدث مسميات أزرار الأكاديمية!");
+            location.reload();
+        } catch(e) { alert("❌ كود المزامنة غير صحيح أو تالف!"); }
+    }
+
+    function buildAdminSelectOptions() {
+        const select = document.getElementById('admSubject'); const currentSelVal = select.value; select.innerHTML = "";
+        academyData.subjectsOrder.forEach(subKey => {
+            const opt = document.createElement('option'); opt.value = subKey;
+            opt.innerText = academyData[subKey] ? academyData[subKey].robotName : subKey; select.appendChild(opt);
+        });
+        if(academyData.subjectsOrder.includes(currentSelVal)) select.value = currentSelVal;
+    }
+
+    function addNewCustomBotSubject() {
+        const rawId = document.getElementById('newBotIdInput').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        const name = document.getElementById('newBotNameInput').value.trim();
+        if(!rawId || !name) { alert("⚠️ يرجى ملء معرف المادة والاسم المعروض معاً!"); return; }
+        academyData[rawId] = { robotName: name, welcome: `مرحباً بك في المساعد الآلي لـ (${name})`, tree: [] };
+        academyData.subjectsOrder.push(rawId);
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
+        document.getElementById('newBotIdInput').value = ""; document.getElementById('newBotNameInput').value = "";
+        buildAdminSelectOptions(); document.getElementById('admSubject').value = rawId; loadSubjectData();
+    }
+
+    function deleteCurrentBotSubject() {
+        const currentSub = document.getElementById('admSubject').value;
+        if(!confirm("🗑 هل تريد الحذف نهائياً؟")) return;
+        academyData.subjectsOrder = academyData.subjectsOrder.filter(k => k !== currentSub); delete academyData[currentSub];
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); buildAdminSelectOptions(); loadSubjectData();
+    }
+
+    function generateNewStudentCodeWithYear() {
+        const currentYear = new Date().getFullYear(); const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let randStr = "";
+        for(let i=0; i<4; i++) randStr += chars.charAt(Math.floor(Math.random() * chars.length));
+        let newCode = `PROF-${currentYear}-${randStr}`; document.getElementById('admStudentCode').value = newCode; academyData.studentAccessCode = newCode;
+    }
+
+    function archiveAndBlockCurrentCode() {
+        const currentCode = academyData.studentAccessCode;
+        if(!academyData.blockedCodes.includes(currentCode)) {
+            academyData.blockedCodes.push(currentCode); generateNewStudentCodeWithYear();
+            document.getElementById('blockedCodesCount').innerText = academyData.blockedCodes.length;
+            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); alert("🔒 تم تأمين وحظر الكود بنجاح.");
+        }
+    }
+
+    function handleLogin() {
+        unlockAudioContext(); setTimeout(() => { playSound('soundClick'); }, 50); refreshDataFromStorage();
+        const code = document.getElementById('accessCode').value.trim();
+        if (code === "Fakhri@Prof2026") { sessionStorage.setItem('fakhri_authenticated_session', 'admin'); location.reload(); } 
+        else if (code === academyData.studentAccessCode) {
+            const lockedFingerprint = localStorage.getItem('fakhri_locked_fingerprint');
+            if (!lockedFingerprint) localStorage.setItem('fakhri_locked_fingerprint', myFingerprint);
+            else if (lockedFingerprint !== myFingerprint) { alert("❌ عذراً! هذا الكود مقفل على جهاز آخر لمكافحة المشاركة."); return; }
+            sessionStorage.setItem('fakhri_authenticated_session', 'student'); location.reload();
+        } else { alert("❌ كود المرور غير صحيح!"); }
+    }
+
+    function logout() { sessionStorage.removeItem('fakhri_authenticated_session'); location.reload(); }
+
+    function renderHubView() {
+        refreshDataFromStorage(); document.getElementById('chatScreen').style.display = 'none'; document.getElementById('hubScreen').style.display = 'flex';
+        document.getElementById('hubAnnouncement').innerText = academyData.globalMessage;
+        const listContainer = document.getElementById('botsContainerList'); listContainer.innerHTML = "";
+        academyData.subjectsOrder.forEach(sub => {
+            if(!academyData[sub]) return;
+            const card = document.createElement('div'); card.className = "bot-card"; card.onclick = () => { openBotChat(sub); };
+            card.innerHTML = `<div style="display:flex; align-items:center; gap:12px;"><span style="font-size:34px;">🤖</span><div><div class="bot-card-name">${academyData[sub].robotName}</div><div class="bot-card-status">● متصل وجاهز</div></div></div>`;
+            listContainer.appendChild(card);
+        });
+    }
+
+    function openBotChat(subject) {
+        refreshDataFromStorage(); activeSubject = subject; studentCurrentPath = []; 
+        document.getElementById('hubScreen').style.display = 'none'; document.getElementById('chatScreen').style.display = 'flex';
+        document.getElementById('headerRobotName').innerText = academyData[subject].robotName; document.getElementById('chatContainer').innerHTML = "";
+        addChatMsg(academyData[subject].welcome, 'bot', '', true); renderStudentButtons();
+    }
+
+    function backToHub() { playSound('soundClick'); renderHubView(); }
+    function getCurrentTreeLevelForStudent() {
+        let level = academyData[activeSubject].tree; studentCurrentPath.forEach(index => { if(level[index] && level[index].children) level = level[index].children; }); return level;
+    }
+
+    /* 🔥 الإصلاح البصري الجذري الدائم لمشكلة اختفاء الأزرار على أندرويد وآيفون وثبات موقع التمرير */
+    function renderStudentButtons() {
+        const optsBox = document.getElementById('optionsContainer'); 
+        optsBox.innerHTML = "";
+        
+        // إيقاف سلوك التمرير القديم قسرياً وإعادة ضبط الشفافية والرؤية لتفادي التعتيم البصري
+        optsBox.style.opacity = "0";
+        
+        const currentLevelItems = getCurrentTreeLevelForStudent();
+        
+        if(studentCurrentPath.length > 0) {
+            const btnBackLevel = document.createElement('button'); 
+            btnBackLevel.className = "opt-btn back-level-btn"; 
+            btnBackLevel.innerText = "↩️ رجوع";
+            btnBackLevel.onclick = () => { playSound('soundClick'); studentCurrentPath.pop(); renderStudentButtons(); };
+            optsBox.appendChild(btnBackLevel);
+        }
+        
+        currentLevelItems.forEach((item, index) => {
+            const btn = document.createElement('button'); 
+            btn.innerText = item.title;
+            if(item.type === 'folder') {
+                btn.className = "opt-btn folder-btn"; 
+                btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); };
+            } else {
+                btn.className = "opt-btn"; 
+                btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); };
+            }
+            optsBox.appendChild(btn);
+        });
+
+        // حيلة المعالجة الزمنية القسرية الذكية لإجبار شاشات الأندرويد والآيفون على التثبيت التام في مساحة العرض
+        setTimeout(() => {
+            optsBox.scrollLeft = 0;
+            optsBox.scroll({ left: 0, behavior: 'instant' });
+            optsBox.style.opacity = "1";
+        }, 50);
+    }
+
+    function addChatMsg(text, sender, htmlContent = "", isWelcome = false) {
+        if(sender === 'bot' && !isWelcome) setTimeout(() => { playSound('soundMsgBot'); }, 100);
+        const box = document.getElementById('chatContainer'); const div = document.createElement('div'); div.className = `msg ${sender}`;
+        if(htmlContent) div.innerHTML = htmlContent; else div.innerText = text; box.appendChild(div); box.scrollTop = box.scrollHeight;
+    }
+
+    function handleSpecialButtonAction(b) {
+        addChatMsg(b.title, 'user');
+        setTimeout(() => {
+            if(b.type === 'text') {
+                let imgHtml = ""; if(b.images && b.images.length > 0) { imgHtml = `<div class="gallery-container">`; b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); imgHtml += `</div>`; }
+                addChatMsg("", 'bot', `💡 <b>الدرس:</b><br>${b.content}${imgHtml}`);
+            } else if(b.type === 'pdf') {
+                addChatMsg("", 'bot', `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" class="pdf-link">📥 فتح ملف PDF</a>`);
+            } else if(b.type === 'quiz') {
+                let html = `❓ <b>سؤال اختبار تفاعلي:</b><br>${b.question}<br><br>`; b.options.forEach(opt => { html += `<button class="quiz-option-btn" onclick="checkQuizAnswer(this, '${opt}', '${b.correct}')">${opt}</button>`; });
+                addChatMsg("", 'bot', html);
+            }
+        }, 350);
+    }
+
+    function checkQuizAnswer(btn, selected, correct) {
+        const allButtons = btn.parentNode.querySelectorAll('button'); allButtons.forEach(b => b.disabled = true);
+        if(selected === correct) { playSound('soundQuizCorrect'); btn.style.background = "#c8e6c9"; btn.innerHTML += " ✅ صحيح!"; } 
+        else { playSound('soundQuizWrong'); btn.style.background = "#ffcdd2"; btn.innerHTML += " ❌ خاطئ (الصحيح: " + correct + ")"; }
+    }
+
+    function getAdminCurrentLevel() {
+        const sub = document.getElementById('admSubject').value; if(!academyData[sub]) return [];
+        let level = academyData[sub].tree; adminCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
+    }
+
+    function loadSubjectData() {
+        refreshDataFromStorage();
+        document.getElementById('admLoginTitle').value = academyData.login.title; document.getElementById('admLoginDesc').value = academyData.login.desc;
+        document.getElementById('admGlobalMsg').value = academyData.globalMessage; document.getElementById('admStudentCode').value = academyData.studentAccessCode;
+        document.getElementById('blockedCodesCount').innerText = academyData.blockedCodes.length;
+        const sub = document.getElementById('admSubject').value; if(!sub) return;
+        document.getElementById('admRobotName').value = academyData[sub] ? academyData[sub].robotName : "";
+        document.getElementById('admWelcome').value = academyData[sub] ? academyData[sub].welcome : ""; renderAdminTree();
+    }
+
+    function renderAdminTree() {
+        const container = document.getElementById('treeAdminContainer'); container.innerHTML = ""; const pathLabel = document.getElementById('adminTreePath');
+        if(adminCurrentPathIndices.length === 0) { pathLabel.innerText = "🌳 شجرة المحاور الرئيسية للبوت:"; } 
+        else {
+            pathLabel.innerText = "📂 التعديل داخل محور فرعي محدد:";
+            const btnBackAdmin = document.createElement('button'); btnBackAdmin.style = "background:#cbd5e0; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; margin-bottom:10px;";
+            btnBackAdmin.innerText = "↩️ رجوع للمستوى الأعلى"; btnBackAdmin.onclick = () => { adminCurrentPathIndices.pop(); renderAdminTree(); }; container.appendChild(btnBackAdmin);
+        }
+        const currentItems = getAdminCurrentLevel();
+        currentItems.forEach((b, index) => {
+            const div = document.createElement('div'); div.className = "card"; let extraHtml = "";
+            if(b.type === 'folder') {
+                extraHtml = `<button onclick="diveIntoAdminFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`;
+            } else {
+                extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateNodeField(${index}, 'type', this.value); renderAdminTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
+                if(b.type === 'text') {
+                    extraHtml += `<label>مضمون الشرح:</label><textarea class="admin-input" rows="2" onchange="updateNodeField(${index}, 'content', this.value)">${b.content || ''}</textarea><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                } else if(b.type === 'pdf') {
+                    extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`;
+                } else if(b.type === 'quiz') {
+                    extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`;
+                }
+            }
+            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف</button>`;
+            container.appendChild(div);
+        });
+    }
+
+    function diveIntoAdminFolder(idx) { adminCurrentPathIndices.push(idx); renderAdminTree(); }
+    function updateNodeField(idx, field, val) { getAdminCurrentLevel()[idx][field] = val; }
+    function updateNodeImages(idx, val) { getAdminCurrentLevel()[idx].images = val.split(','); }
+    function updateNodeQuizOptions(idx, val) { getAdminCurrentLevel()[idx].options = val.split(','); }
+    function changeNodeType(idx, metaType) { const level = getAdminCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderAdminTree(); }
+    function addNodeAtCurrentLevel() { getAdminCurrentLevel().push({ title: "عنصر جديد غير مسمى", type: "folder", children: [] }); renderAdminTree(); }
+    function deleteNode(idx) { if(confirm("🗑️ هل أنت متأكد من الحذف؟")) { getAdminCurrentLevel().splice(idx, 1); renderAdminTree(); } }
+
+    function saveAdminData() {
+        academyData.login.title = document.getElementById('admLoginTitle').value;
+        academyData.login.desc = document.getElementById('admLoginDesc').value;
+        academyData.globalMessage = document.getElementById('admGlobalMsg').value;
+        academyData.studentAccessCode = document.getElementById('admStudentCode').value;
+        const sub = document.getElementById('admSubject').value;
+        if(sub && academyData[sub]) { academyData[sub].robotName = document.getElementById('admRobotName').value; academyData[sub].welcome = document.getElementById('admWelcome').value; }
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
+        alert("🎉 تم حفظ التعديلات محلياً بنجاح! لمزامنتها مع جهازك الأندرويد أو بقية الأجهزة، يرجى الضغط على زر 'نسخ كود المزامنة اللحظية الشاملة' بالأعلى ونقله للطرف الآخر.");
+    }
+
+    window.addEventListener('blur', () => { document.getElementById('shieldScreen').style.display = 'block'; });
+    window.addEventListener('focus', () => { document.getElementById('shieldScreen').style.display = 'none'; });
+</script>
+</body>
+</html>
+                        
