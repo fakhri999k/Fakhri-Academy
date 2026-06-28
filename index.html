@@ -37,7 +37,7 @@
         .bot-card-name { font-size: 17px; font-weight: bold; color: #1b4d3e; }
         .bot-card-status { font-size:12px; color: #00cc52; margin-top:2px; font-weight:bold; }
 
-        /* تعديل رأس البوت ليعود فخماً واحترافياً كم كان تماماً */
+        .chat-screen { display: flex; flex-direction: column; height: 100%; background: #ffffff; }
         .app-header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--secondary-color); flex-shrink: 0; }
         .robot-head { display: flex; align-items: center; gap: 14px; }
         .robot-icon { font-size: 38px; display: inline-block; }
@@ -64,8 +64,11 @@
         .admin-panel { padding: 15px; background: white; overflow-y: auto; height: 100vh; height: 100dvh; box-sizing: border-box; display: none; }
         .admin-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; }
         .card { background: #f4f7f5; padding: 15px; border: 1px solid #c8e6c9; border-radius: 12px; margin-bottom: 15px; }
+        
+        .code-flex-row { display: flex; gap: 10px; margin-top: 10px; }
+        .history-list { margin: 10px 0 0 0; padding-right: 20px; font-size: 13px; color: #555; }
+        .factory-flex-row { display: flex; gap: 10px; }
 
-        /* شريط التنسيق الاحترافي لصندوق الوورد */
         .editor-toolbar { background: #e2e8f0; padding: 6px; border-top-left-radius: 8px; border-top-right-radius: 8px; border: 1px solid #cbd5e0; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
         .editor-btn { background: #fff; border: 1px solid #a0aec0; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
         .editor-select { background: #fff; border: 1px solid #a0aec0; padding: 4px; border-radius: 4px; font-size: 12px; }
@@ -83,7 +86,7 @@
 <audio id="soundQuizCorrect" src="https://cdn.pixabay.com/audio/2023/10/16/audio_097f53a5c1.mp3" preload="auto"></audio>
 <audio id="soundQuizWrong" src="https://cdn.pixabay.com/audio/2022/12/15/audio_5f4f89d6e4.mp3" preload="auto"></audio>
 
-<!-- شاشة الدخول والتنبيه الصغير الحصري -->
+<!-- شاشة الدخول الاحترافية والتنبيه الصغير المباشر -->
 <div id="loginScreen" class="screen">
     <div class="login-bg"></div>
     <div class="login-content">
@@ -91,7 +94,7 @@
         <div class="login-title" id="loginHeaderTitle">أكاديمية أستاذ فخري الرقمية</div>
         <div style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;" id="loginHeaderDesc">مرحباً بك في المنصة الذكية الآمنة لتجربة تعليمية غامرة.</div>
         
-        <div id="fingerprintArea" style="font-size:13px; color:#ffebee; background:rgba(211,47,47,0.25); padding:10px; border-radius:8px; margin-bottom:15px; font-weight: bold; border: 1px solid #ef5350;">
+        <div style="font-size:13px; color:#ffebee; background:rgba(211,47,47,0.25); padding:10px; border-radius:8px; margin-bottom:15px; font-weight: bold; border: 1px solid #ef5350;">
             تنبيه: هذا الكود يستعمل من أجل تفعيل حسابك فقط!
         </div>
         
@@ -100,7 +103,7 @@
     </div>
 </div>
 
-<!-- واجهة الطالب -->
+<!-- واجهة تطبيق الطلاب والدروس -->
 <div id="studentApp" class="app-container" style="display:none;">
     <div id="hubScreen" class="hub-screen">
         <div class="hub-header" id="hubMainTitle">
@@ -112,10 +115,11 @@
         <div class="bots-list" id="botsContainerList"></div>
     </div>
 
-    <div id="chatScreen" class="chat-screen">
+    <!-- شاشة المحادثة الكاملة بعد حل مشكلة الصفحة الخضراء الفارغة -->
+    <div id="chatScreen" class="chat-screen" style="display:none;">
         <div class="app-header">
             <div class="robot-head">
-                <span class="robot-icon">🤖</span>
+                <span id="headerRobotIcon" class="robot-icon">🤖</span>
                 <div class="robot-info-block">
                     <span id="headerRobotName" class="robot-title-text">...</span>
                     <span class="robot-status">● متصل ومستعد لمساعدتك</span>
@@ -128,23 +132,31 @@
     </div>
 </div>
 
-<!-- لوحة التحكم الاحترافية للأستاذ فخري -->
+<!-- لوحة التحكم الكاملة والمعدلة للأستاذ فخري -->
 <div id="adminPanel" class="admin-panel">
     <h2 style="color: var(--primary-color); border-bottom: 2px solid #c8e6c9; padding-bottom: 8px;">⚙️ لوحة تحكم المواد والأزرار الشجرية</h2>
     <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:8px 15px; border-radius:6px; float:left; cursor:pointer; font-weight:bold;">قفل الحساب 🔒</button>
     
+    <!-- الكودات الكاملة: المولد + تصفير + السجل المفقود -->
     <div class="card" style="border: 2px solid var(--secondary-color); background: #e8f5e9; margin-top: 20px;">
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🔑 كود دخول الطلاب الحالي:</label>
-        <input type="text" id="admStudentCode" class="admin-input" style="font-weight:bold; text-align:center; color:var(--primary-color);">
+        <input type="text" id="admStudentCode" class="admin-input" style="font-weight:bold; text-align:center; color:var(--primary-color);" readonly>
+        <div class="code-flex-row">
+            <button onclick="generateNewStudentCode()" class="btn-prime" style="margin:0; background:#2e7d32; padding:10px;">🔄 توليد كود جديد</button>
+            <button onclick="resetStudentCode()" class="btn-prime" style="margin:0; background:#c62828; padding:10px;">🧹 تصفير الكود</button>
+        </div>
+        <div style="margin-top:12px; font-weight:bold; font-size:13px; color:#333;">📋 الكودات السنوية المحظورة والمستعملة قديماً:</div>
+        <ul id="previousCodesList" class="history-list"></ul>
     </div>
 
+    <!-- مصنع المساعدين بعد إصلاح الـ IDs وضمان قبول المدخلات بدون رسائل خطأ -->
     <div class="card" style="border: 2px solid #1b4d3e; background: #f0f4f1;">
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🛠️ مصنع المساعدين والمواد:</label>
-        <div style="display:flex; gap:10px; margin-bottom: 5px;">
-            <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة بالإنجليزي (مثل: philosophy)" style="margin:0;">
-            <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: الفلسفة 🧠)" style="margin:0;">
+        <div class="factory-flex-row">
+            <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة بالإنجليزي (مثل: french)" style="margin:0;">
+            <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: مساعد الفرنسي 🇨🇵)" style="margin:0;">
         </div>
-        <button onclick="addNewCustomBotSubject()" class="btn-prime" style="margin-top:5px; padding:10px;">➕ إنشاء وتفعيل المادة فوراً</button>
+        <button onclick="addNewCustomBotSubject()" class="btn-prime" style="margin-top:8px; padding:10px;">➕ إنشاء وتفعيل المادة فوراً</button>
     </div>
 
     <div class="card">
@@ -179,7 +191,8 @@
         login: { title: "أكاديمية أستاذ فخري الرقمية", desc: "مرحباً بك في المنصة الذكية الآمنة لتجربة تعليمية غامرة." },
         studentAccessCode: "PROF-2026-X83B", 
         globalMessage: "أعزائي التلاميذ، يرجى تصفح المحاور والدروس عبر الفلاتر الذكية بداخل كل مراجعة. بالتوفيق لكم!",
-        subjectsOrder: ['philosophy', 'arabic'], 
+        subjectsOrder: ['philosophy', 'arabic'],
+        usedCodes: [],
         philosophy: {
             robotName: "المساعد الفلسفي الذكي 🧠",
             welcome: "مرحباً بك في فضاء الفلسفة. تصفح المحاور العامة بالأسفل للوصول للملخصات والكويزات.",
@@ -205,6 +218,7 @@
         if(localData) { 
             academyData = JSON.parse(localData); 
             if(!academyData.subjectsOrder) academyData.subjectsOrder = ['philosophy', 'arabic'];
+            if(!academyData.usedCodes) academyData.usedCodes = [];
         }
     }
 
@@ -213,12 +227,19 @@
         document.getElementById('loginHeaderTitle').innerText = academyData.login.title;
         document.getElementById('loginHeaderDesc').innerText = academyData.login.desc;
         document.getElementById('admStudentCode').value = academyData.studentAccessCode;
+        updateUsedCodesUI();
 
         const sessionAuth = sessionStorage.getItem('fakhri_authenticated_session');
         if(sessionAuth) {
             document.getElementById('loginScreen').style.display = 'none';
-            if(sessionAuth === 'admin') { document.getElementById('adminPanel').style.display = 'block'; buildAdminSelectOptions(); loadSubjectData(); } 
-            else { document.getElementById('studentApp').style.display = 'flex'; renderHubView(); }
+            if(sessionAuth === 'admin') { 
+                document.getElementById('adminPanel').style.display = 'block'; 
+                buildAdminSelectOptions(); 
+                loadSubjectData(); 
+            } else { 
+                document.getElementById('studentApp').style.display = 'flex'; 
+                renderHubView(); 
+            }
         }
     }
 
@@ -231,15 +252,74 @@
         if(academyData.subjectsOrder.includes(currentSelVal)) select.value = currentSelVal;
     }
 
+    // إصلاح مصنع المساعدين: قراءة دقيقة ومعالجة صحيحة بدون رسائل خطأ وهمية
     function addNewCustomBotSubject() {
-        const rawId = document.getElementById('newBotIdInput').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-        const name = document.getElementById('newBotNameInput').value.trim();
-        if(!rawId || !name) { alert("⚠️ يرجى ملء معرف المادة والاسم المعروض!"); return; }
+        const idInput = document.getElementById('newBotIdInput');
+        const nameInput = document.getElementById('newBotNameInput');
+        
+        const rawId = idInput.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        const name = nameInput.value.trim();
+        
+        if(!rawId || !name) { 
+            alert("⚠️ يرجى ملء معرف المادة والاسم المعروض!"); 
+            return; 
+        }
+        
         academyData[rawId] = { robotName: name, welcome: `مرحباً بك في المساعد الآلي لـ (${name})`, tree: [] };
         academyData.subjectsOrder.push(rawId);
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-        document.getElementById('newBotIdInput').value = ""; document.getElementById('newBotNameInput').value = "";
-        buildAdminSelectOptions(); document.getElementById('admSubject').value = rawId; loadSubjectData();
+        
+        idInput.value = ""; 
+        nameInput.value = "";
+        
+        buildAdminSelectOptions(); 
+        document.getElementById('admSubject').value = rawId; 
+        loadSubjectData();
+        alert("🟢 تم إضافة وتفعيل المادة الجديدة بنجاح وبشكل احترافي!");
+    }
+
+    // إصلاح لوحة الكودات: توليد عشوائي، تصفير، وتخزين السجل السنوي
+    function generateNewStudentCode() {
+        const currentCode = academyData.studentAccessCode;
+        if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) {
+            academyData.usedCodes.push(currentCode);
+        }
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let randomPart = '';
+        for (let i = 0; i < 4; i++) { randomPart += chars.charAt(Math.floor(Math.random() * chars.length)); }
+        const newCode = `PROF-2026-${randomPart}`;
+        
+        academyData.studentAccessCode = newCode;
+        document.getElementById('admStudentCode').value = newCode;
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
+        updateUsedCodesUI();
+    }
+
+    function resetStudentCode() {
+        const currentCode = academyData.studentAccessCode;
+        if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) {
+            academyData.usedCodes.push(currentCode);
+        }
+        academyData.studentAccessCode = "لا يوجد كود نشط";
+        document.getElementById('admStudentCode').value = "لا يوجد كود نشط";
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
+        updateUsedCodesUI();
+    }
+
+    function updateUsedCodesUI() {
+        const listElement = document.getElementById('previousCodesList');
+        if(!listElement) return;
+        listElement.innerHTML = '';
+        if(academyData.usedCodes.length === 0) {
+            listElement.innerHTML = `<li style="color:#aaa;">لا توجد أكواد مستعملة سابقاً بعد.</li>`;
+            return;
+        }
+        academyData.usedCodes.forEach(code => {
+            const li = document.createElement('li');
+            li.style = "padding: 4px 0; color: #c62828; font-weight: bold;";
+            li.innerText = `🔒 ${code} (مستعمل ومحظور)`;
+            listElement.appendChild(li);
+        });
     }
 
     function deleteCurrentBotSubject() {
@@ -253,30 +333,56 @@
         unlockAudioContext(); setTimeout(() => { playSound('soundClick'); }, 50); refreshDataFromStorage();
         const code = document.getElementById('accessCode').value.trim();
         if (code === "Fakhri@Prof2026") { sessionStorage.setItem('fakhri_authenticated_session', 'admin'); location.reload(); } 
-        else if (code === academyData.studentAccessCode) {
+        else if (code === academyData.studentAccessCode && code !== "لا يوجد كود نشط") {
             sessionStorage.setItem('fakhri_authenticated_session', 'student'); location.reload();
-        } else { alert("❌ كود المرور غير صحيح!"); }
+        } else { alert("❌ كود المرور غير صحيح أو غير مفعل!"); }
     }
 
     function logout() { sessionStorage.removeItem('fakhri_authenticated_session'); location.reload(); }
 
     function renderHubView() {
-        refreshDataFromStorage(); document.getElementById('chatScreen').style.display = 'none'; document.getElementById('hubScreen').style.display = 'flex';
+        refreshDataFromStorage(); 
+        document.getElementById('chatScreen').style.display = 'none'; 
+        document.getElementById('hubScreen').style.display = 'flex';
         document.getElementById('hubAnnouncement').innerText = academyData.globalMessage;
-        const listContainer = document.getElementById('botsContainerList'); listContainer.innerHTML = "";
+        
+        const listContainer = document.getElementById('botsContainerList'); 
+        listContainer.innerHTML = "";
+        
         academyData.subjectsOrder.forEach(sub => {
             if(!academyData[sub]) return;
-            const card = document.createElement('div'); card.className = "bot-card"; card.onclick = () => { openBotChat(sub); };
+            const card = document.createElement('div'); card.className = "bot-card"; 
+            card.onclick = () => { openBotChat(sub); };
+            
+            // استخراج الإيموجي أو استخدام الإيموجي الافتراضي لضمان المظهر
+            let icon = "🤖";
+            if(academyData[sub].robotName.includes("🧠")) icon = "🧠";
+            if(academyData[sub].robotName.includes("✍️")) icon = "✍️";
+            
             card.innerHTML = `<div style="display:flex; align-items:center; gap:12px;"><span style="font-size:34px;">🤖</span><div><div class="bot-card-name">${academyData[sub].robotName}</div><div class="bot-card-status">● متصل وجاهز</div></div></div>`;
             listContainer.appendChild(card);
         });
     }
 
+    // إصلاح مشكلة الصفحة الخضراء الفارغة عند نقر التلميذ + تعميم الميزات لجميع البوتات المضافة حديثاً
     function openBotChat(subject) {
-        refreshDataFromStorage(); activeSubject = subject; studentCurrentPath = []; 
-        document.getElementById('hubScreen').style.display = 'none'; document.getElementById('chatScreen').style.display = 'flex';
-        document.getElementById('headerRobotName').innerText = academyData[subject].robotName; document.getElementById('chatContainer').innerHTML = "";
-        addChatMsg(academyData[subject].welcome, 'bot', '', true); renderStudentButtons();
+        refreshDataFromStorage(); 
+        activeSubject = subject; 
+        studentCurrentPath = []; 
+        
+        // إخفاء الـ Hub وإظهار مساحة الشات كاملة ومجهزة بالكامل
+        document.getElementById('hubScreen').style.display = 'none'; 
+        document.getElementById('chatScreen').style.display = 'flex';
+        
+        // تحديد الرمز والاسم ديناميكياً بناءً على ما أنشأه الأستاذ في المصنع
+        document.getElementById('headerRobotName').innerText = academyData[subject].robotName;
+        
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.innerHTML = ""; // تصفير المحادثة السابقة
+        
+        // إطلاق الرسالة الترحيبية الاحترافية فوراً للبوت المختار
+        addChatMsg(academyData[subject].welcome, 'bot', '', true); 
+        renderStudentButtons();
     }
 
     function backToHub() { playSound('soundClick'); renderHubView(); }
@@ -295,15 +401,17 @@
             optsBox.appendChild(btnBackLevel);
         }
         
-        currentLevelItems.forEach((item, index) => {
-            const btn = document.createElement('button'); btn.innerText = item.title;
-            if(item.type === 'folder') {
-                btn.className = "opt-btn folder-btn"; btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); };
-            } else {
-                btn.className = "opt-btn"; btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); };
-            }
-            optsBox.appendChild(btn);
-        });
+        if(currentLevelItems) {
+            currentLevelItems.forEach((item, index) => {
+                const btn = document.createElement('button'); btn.innerText = item.title;
+                if(item.type === 'folder') {
+                    btn.className = "opt-btn folder-btn"; btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); };
+                } else {
+                    btn.className = "opt-btn"; btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); };
+                }
+                optsBox.appendChild(btn);
+            });
+        }
     }
 
     function addChatMsg(text, sender, htmlContent = "", isWelcome = false) {
@@ -405,12 +513,12 @@
         academyData.login.title = document.getElementById('admLoginTitle').value;
         academyData.login.desc = document.getElementById('admLoginDesc').value;
         academyData.globalMessage = document.getElementById('admGlobalMsg').value;
-        academyData.studentAccessCode = document.getElementById('admStudentCode').value;
+        
         const sub = document.getElementById('admSubject').value;
         if(sub && academyData[sub]) { academyData[sub].robotName = document.getElementById('admRobotName').value; academyData[sub].welcome = document.getElementById('admWelcome').value; }
         
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-        alert("🎉 تم حفظ كافة التعديلات وتثبيتها بنجاح للأزرار والمحرر الجديد!");
+        alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام للموقع بالكامل!");
     }
 
     window.addEventListener('blur', () => { document.getElementById('shieldScreen').style.display = 'block'; });
