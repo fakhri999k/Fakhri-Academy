@@ -53,9 +53,14 @@
         .opt-btn.folder-btn { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .opt-btn.back-level-btn { background: #ffebee; border-color: #ffcdd2; color: #c62828; }
         
-        .msg { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 15px; line-height: 1.6; word-wrap: break-word; }
+        /* تعديل الرسالة لإضافة علامتي المشاهدة الفسفورية بشكل واقعي */
+        .msg { max-width: 82%; padding: 12px 16px 24px 16px; border-radius: 16px; font-size: 15px; line-height: 1.6; word-wrap: break-word; position: relative; }
         .msg.bot { background: #f0f4f1; align-self: flex-start; border-top-left-radius: 2px; color: #2d3748; }
         .msg.user { background: var(--secondary-color); color: white; align-self: flex-end; border-top-right-radius: 2px; }
+        
+        /* علامتا المشاهدة الفسفورية أسفل كل رسالة */
+        .msg-ticks { position: absolute; bottom: 4px; left: 14px; font-size: 12px; color: #00ff66; font-weight: bold; letter-spacing: -1px; user-select: none; }
+        .msg.user .msg-ticks { left: auto; right: 14px; color: #00ff66; }
         
         .gallery-container { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
         .gallery-container img { max-width: 100%; border-radius: 8px; }
@@ -76,7 +81,7 @@
 
         #shieldScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; color: white; text-align: center; font-size: 20px; padding-top: 20%; }
 
-        /* تعديل واجهة الأستاذ المطور لتصبح كاملة الشاشة ومريحة جداً للهواتف والتابلت دون تقسيم مشوه */
+        /* واجهة الأستاذ المطور المتكاملة */
         .dev-fullscreen-container { display: flex; width: 100%; height: 100vh; height: 100dvh; background: #f4f7f5; position: relative; }
         .dev-panel-main { width: 100%; height: 100%; padding: 15px; overflow-y: auto; box-sizing: border-box; background: white; display: block; }
         .dev-preview-modal { width: 100%; height: 100%; display: none; flex-direction: column; background: var(--chat-bg); position: absolute; top: 0; left: 0; z-index: 9999; }
@@ -120,7 +125,7 @@
         <div class="bots-list" id="botsContainerList"></div>
     </div>
 
-    <!-- شاشة المحادثة الكاملة -->
+    <!-- شاشة المحادثة الكاملة للطلاب -->
     <div id="chatScreen" class="chat-screen" style="display:none;">
         <div class="app-header">
             <div class="robot-head">
@@ -137,9 +142,8 @@
     </div>
 </div>
 
-<!-- واجهة الأستاذ المطور المحدثة: تظهر بالكامل وبشكل مريح ومنسق للشاشات والهواتف -->
+<!-- واجهة الأستاذ المطور المحدثة والمثبتة تفاصيلها بالكامل -->
 <div id="developerApp" class="dev-fullscreen-container" style="display:none;">
-    <!-- الصفحة الرئيسية لتطوير المحتوى وبناء الأزرار والشجرة -->
     <div id="devPanelMain" class="dev-panel-main">
         <h2 style="color: var(--primary-color); border-bottom: 2px solid #cbd5e0; padding-bottom: 8px; margin-top:0;">🛠️ لوحة تطوير مادة: <span id="devSubjectTitle" style="color:var(--secondary-color);">...</span></h2>
         
@@ -149,9 +153,10 @@
         </div>
         
         <div class="card">
-            <label style="font-weight:bold; color: var(--secondary-color);">🤖 اسم البوت المخصص:</label>
-            <input type="text" id="devRobotName" class="admin-input">
-            <label style="font-weight:bold;">💬 رسالة ترحيب البوت المخصصة:</label>
+            <label style="font-weight:bold; color: var(--secondary-color);">🤖 اسم البوت المخصص (معين من قبل الإدارة):</label>
+            <!-- جعل الحقل للقراءة فقط بناءً على طلبك لتنفرد أنت بالتسمية -->
+            <input type="text" id="devRobotName" class="admin-input" disabled style="background-color: #e2e8f0; color: #4a5568; cursor: not-allowed; font-weight: bold;">
+            <label style="font-weight:bold; margin-top:10px; display:block;">💬 رسالة ترحيب البوت المخصصة:</label>
             <textarea id="devWelcome" class="admin-input" rows="2"></textarea>
         </div>
 
@@ -164,7 +169,7 @@
         <button onclick="saveDevDataOnly()" class="btn-prime" style="width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32); padding: 14px; font-size: 16px;">💾 حفظ وتثبيت تعديلات المادة الحالية فقط</button>
     </div>
     
-    <!-- صفحة تجريب الشات المنفصلة تظهر بملء الشاشة عند طلب المعاينة -->
+    <!-- واجهة تجريب الشات المخصصة للمطورين بملء الشاشة -->
     <div id="devPreviewModal" class="dev-preview-modal">
         <div class="chat-screen">
             <div class="app-header" style="background: var(--secondary-color);">
@@ -191,7 +196,6 @@
     <h2 style="color: var(--primary-color); border-bottom: 2px solid #c8e6c9; padding-bottom: 8px;">⚙️ لوحة تحكم المواد والأزرار الشجرية</h2>
     <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:8px 15px; border-radius:6px; float:left; cursor:pointer; font-weight:bold;">قفل الحساب 🔒</button>
     
-    <!-- الكودات الكاملة -->
     <div class="card" style="border: 2px solid var(--secondary-color); background: #e8f5e9; margin-top: 20px;">
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🔑 كود دخول الطلاب الحالي:</label>
         <input type="text" id="admStudentCode" class="admin-input" style="font-weight:bold; text-align:center; color:var(--primary-color);" readonly>
@@ -203,7 +207,6 @@
         <ul id="previousCodesList" class="history-list"></ul>
     </div>
 
-    <!-- مصنع المساعدين المطور مع كودات تطوير المدرسين المخصصة والتصفير المباشر -->
     <div class="card" style="border: 2px solid #1b4d3e; background: #f0f4f1;">
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🛠️ مصنع المساعدين والمواد للأساتذة المطورين:</label>
         <div class="factory-flex-row">
@@ -229,7 +232,7 @@
     <select id="admSubject" class="admin-input" onchange="loadSubjectData()"></select>
 
     <div class="card">
-        <label style="font-weight:bold; color: #2e7d32;">🤖 تخصيص اسم هذا البوت:</label>
+        <label style="font-weight:bold; color: #2e7d32;">🤖 تخصيص اسم هذا البوت (أنت الوحيد المخول بتغييره):</label>
         <input type="text" id="admRobotName" class="admin-input">
         <label style="font-weight:bold;">💬 رسالة ترحيب البوت المخصصة:</label>
         <textarea id="admWelcome" class="admin-input" rows="2"></textarea>
@@ -511,7 +514,12 @@
     function addChatMsg(text, sender, htmlContent = "", isWelcome = false) {
         if(sender === 'bot' && !isWelcome) setTimeout(() => { playSound('soundMsgBot'); }, 100);
         const box = document.getElementById('chatContainer'); const div = document.createElement('div'); div.className = `msg ${sender}`;
-        if(htmlContent) div.innerHTML = htmlContent; else div.innerText = text; box.appendChild(div); box.scrollTop = box.scrollHeight;
+        
+        // بناء علامتي المشاهدة الفسفورية في أسفل محتوى الرسالة للاستخدام الطلابي
+        const ticksHtml = `<span class="msg-ticks">✓✓</span>`;
+        
+        if(htmlContent) div.innerHTML = htmlContent + ticksHtml; else div.innerHTML = text + ticksHtml; 
+        box.appendChild(div); box.scrollTop = box.scrollHeight;
     }
 
     function handleSpecialButtonAction(b) {
@@ -586,7 +594,7 @@
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام للموقع بالكامل!");
     }
 
-    /* دوال إدارة واجهة الأستاذ المطور الفردية الكاملة وبدون تقسيم شاشة */
+    /* دوال إدارة واجهة الأستاذ المطور الفردية الكاملة */
     function getDevCurrentLevel() {
         if(!academyData[sessionDevSubject]) return [];
         let level = academyData[sessionDevSubject].tree; devCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
@@ -629,20 +637,27 @@
     function updateDevNodeImages(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].images = val.split(','); }
     function updateDevNodeQuizOptions(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].options = val.split(','); }
     function changeDevNodeType(idx, metaType) { if(!checkDevTokenValidity()) return; const level = getDevCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderDevTree(); }
-    function addNodeAtCurrentDevLevel() { if(!checkDevTokenValidity()) return; getDevCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); renderDevTree(); }
+    
+    /* تم إصلاح الدالة بناءً على طلبك لتجعل الأستاذ يضيف أزراراً جديدة بحرية كاملة دون أي خلل */
+    function addNodeAtCurrentDevLevel() { 
+        if(!checkDevTokenValidity()) return; 
+        getDevCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); 
+        renderDevTree(); 
+    }
+    
     function deleteDevNode(idx) { if(!checkDevTokenValidity()) return; if(confirm("🗑️ هل أنت متأكد من حذف هذا الزر؟")) { getDevCurrentLevel().splice(idx, 1); renderDevTree(); } }
 
     function saveDevDataOnly() {
         if(!checkDevTokenValidity()) return;
         if(sessionDevSubject && academyData[sessionDevSubject]) {
-            academyData[sessionDevSubject].robotName = document.getElementById('devRobotName').value;
+            // يتم الحفاظ على اسم البوت المسجل مسبقاً وتعديل الرسالة الترحيبية فقط
             academyData[sessionDevSubject].welcome = document.getElementById('devWelcome').value;
         }
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
         alert("💾 تم حفظ وتثبيت تعديلات مادتك فقط في قاعدة البيانات الموحدة بنجاح!");
     }
 
-    /* الانتقال إلى وضع المعاينة بملء الشاشة تلبية لطلبك */
+    /* الانتقال إلى وضع المعاينة بملء الشاشة */
     function switchToDevPreviewMode() {
         if(!checkDevTokenValidity()) return;
         document.getElementById('devPanelMain').style.display = 'none';
@@ -659,11 +674,13 @@
     function refreshDevChatPreview() {
         if(!checkDevTokenValidity()) return;
         devCurrentPath = [];
-        document.getElementById('devHeaderRobotName').innerText = document.getElementById('devRobotName').value;
+        // يعرض الاسم الثابت المخزن مسبقاً
+        document.getElementById('devHeaderRobotName').innerText = academyData[sessionDevSubject].robotName;
         const box = document.getElementById('devChatContainer'); box.innerHTML = "";
         
+        // بناء رسالة البوت الترحيبية في وضع المعاينة مع علامات المشاهدة الفسفورية
         const div = document.createElement('div'); div.className = "msg bot";
-        div.innerText = document.getElementById('devWelcome').value;
+        div.innerHTML = document.getElementById('devWelcome').value + `<span class="msg-ticks">✓✓</span>`;
         box.appendChild(div);
         renderDevPreviewButtons();
     }
@@ -694,20 +711,27 @@
 
     function handleDevPreviewButtonAction(b) {
         const box = document.getElementById('devChatContainer');
-        const userDiv = document.createElement('div'); userDiv.className = "msg user"; userDiv.innerText = b.title;
+        const userDiv = document.createElement('div'); userDiv.className = "msg user"; 
+        
+        // إضافة علامات المشاهدة الفسفورية في وضع المعاينة
+        userDiv.innerHTML = b.title + `<span class="msg-ticks">✓✓</span>`;
         box.appendChild(userDiv); box.scrollTop = box.scrollHeight;
         
         setTimeout(() => {
             const botDiv = document.createElement('div'); botDiv.className = "msg bot";
+            let innerContent = "";
             if(b.type === 'text') {
                 let imgHtml = ""; if(b.images && b.images.length > 0) { imgHtml = `<div class="gallery-container">`; b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); imgHtml += `</div>`; }
-                botDiv.innerHTML = `<div style="direction:rtl; text-align:right;">${b.content}</div>${imgHtml}`;
+                innerContent = `<div style="direction:rtl; text-align:right;">${b.content}</div>${imgHtml}`;
             } else if(b.type === 'pdf') {
-                botDiv.innerHTML = `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" style="color:#2e7d32; font-weight:bold;">📥 فتح ملف PDF</a>`;
+                innerContent = `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" style="color:#2e7d32; font-weight:bold;">📥 فتح ملف PDF</a>`;
             } else if(b.type === 'quiz') {
                 let html = `❓ <b>${b.question}</b><br><br>`; b.options.forEach(opt => { html += `<button class="quiz-option-btn" disabled>${opt}</button>`; });
-                botDiv.innerHTML = html;
+                innerContent = html;
             }
+            
+            // دمج علامات المشاهدة الفسفورية مع رد البوت في المعاينة
+            botDiv.innerHTML = innerContent + `<span class="msg-ticks">✓✓</span>`;
             box.appendChild(botDiv); box.scrollTop = box.scrollHeight;
         }, 300);
     }
