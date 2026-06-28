@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -75,6 +75,11 @@
         .wysiwyg-editor { width: 100%; min-height: 120px; border: 1px solid #cbd5e0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; padding: 12px; background: #fff; overflow-y: auto; margin-bottom: 12px; outline: none; text-align: right; }
 
         #shieldScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; color: white; text-align: center; font-size: 20px; padding-top: 20%; }
+
+        /* واجهة الأستاذ المطور المقسومة */
+        .dev-split-container { display: flex; width: 100%; height: 100vh; height: 100dvh; background: #f4f7f5; }
+        .dev-panel-left { width: 55%; padding: 15px; overflow-y: auto; box-sizing: border-box; border-left: 2px solid #cbd5e0; background: white; }
+        .dev-preview-right { width: 45%; height: 100%; display: flex; flex-direction: column; background: var(--chat-bg); box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body oncontextmenu="return false;" oncopy="return false;" oncut="return false;">
@@ -86,7 +91,7 @@
 <audio id="soundQuizCorrect" src="https://cdn.pixabay.com/audio/2023/10/16/audio_097f53a5c1.mp3" preload="auto"></audio>
 <audio id="soundQuizWrong" src="https://cdn.pixabay.com/audio/2022/12/15/audio_5f4f89d6e4.mp3" preload="auto"></audio>
 
-<!-- شاشة الدخول الاحترافية والتنبيه الصغير المباشر -->
+<!-- شاشة الدخول الاحترافية -->
 <div id="loginScreen" class="screen">
     <div class="login-bg"></div>
     <div class="login-content">
@@ -115,7 +120,7 @@
         <div class="bots-list" id="botsContainerList"></div>
     </div>
 
-    <!-- شاشة المحادثة الكاملة بعد حل مشكلة الصفحة الخضراء الفارغة -->
+    <!-- شاشة المحادثة الكاملة -->
     <div id="chatScreen" class="chat-screen" style="display:none;">
         <div class="app-header">
             <div class="robot-head">
@@ -132,12 +137,53 @@
     </div>
 </div>
 
-<!-- لوحة التحكم الكاملة والمعدلة للأستاذ فخري -->
+<!-- واجهة الأستاذ المطور الضيف المقسومة والمستقلة بالكامل -->
+<div id="developerApp" class="dev-split-container" style="display:none;">
+    <div class="dev-panel-left">
+        <h2 style="color: var(--primary-color); border-bottom: 2px solid #cbd5e0; padding-bottom: 8px; margin-top:0;">🛠️ لوحة تطوير مادة: <span id="devSubjectTitle" style="color:var(--secondary-color);">...</span></h2>
+        <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:6px 12px; border-radius:6px; float:left; cursor:pointer; font-weight:bold;">خروج 🔒</button>
+        <div style="clear:both; height:10px;"></div>
+        
+        <div class="card">
+            <label style="font-weight:bold; color: var(--secondary-color);">🤖 اسم البوت المخصص:</label>
+            <input type="text" id="devRobotName" class="admin-input">
+            <label style="font-weight:bold;">💬 رسالة ترحيب البوت المخصصة:</label>
+            <textarea id="devWelcome" class="admin-input" rows="2"></textarea>
+        </div>
+
+        <div class="card" style="background: #eef2ef;">
+            <div style="font-weight:bold; margin-bottom:10px; color: var(--primary-color);" id="devTreePath">🌳 شجرة المحاور الخاصة بمادتك:</div>
+            <div id="treeDevContainer"></div>
+            <button onclick="addNodeAtCurrentDevLevel()" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر جديد في هذا المستوى</button>
+        </div>
+
+        <button onclick="saveDevDataOnly()" class="btn-prime" style="width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32);">💾 حفظ وتثبيت تعديلات المادة الحالية فقط</button>
+    </div>
+    
+    <div class="dev-preview-right">
+        <div class="chat-screen">
+            <div class="app-header" style="background: var(--secondary-color);">
+                <div class="robot-head">
+                    <span class="robot-icon">🤖</span>
+                    <div class="robot-info-block">
+                        <span id="devHeaderRobotName" class="robot-title-text">...</span>
+                        <span class="robot-status">● وضع المعاينة والتطوير النشط</span>
+                    </div>
+                </div>
+                <button onclick="refreshDevChatPreview()" class="btn-back" style="background:rgba(0,0,0,0.3);">🔄 تحديث وتجربة المحادثة الآن</button>
+            </div>
+            <div class="chat-box" id="devChatContainer"></div>
+            <div class="options-area" id="devOptionsContainer"></div>
+        </div>
+    </div>
+</div>
+
+<!-- لوحة التحكم الكاملة للمدير (الأستاذ فخري فقط) -->
 <div id="adminPanel" class="admin-panel">
     <h2 style="color: var(--primary-color); border-bottom: 2px solid #c8e6c9; padding-bottom: 8px;">⚙️ لوحة تحكم المواد والأزرار الشجرية</h2>
     <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:8px 15px; border-radius:6px; float:left; cursor:pointer; font-weight:bold;">قفل الحساب 🔒</button>
     
-    <!-- الكودات الكاملة: المولد + تصفير + السجل المفقود -->
+    <!-- الكودات الكاملة -->
     <div class="card" style="border: 2px solid var(--secondary-color); background: #e8f5e9; margin-top: 20px;">
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🔑 كود دخول الطلاب الحالي:</label>
         <input type="text" id="admStudentCode" class="admin-input" style="font-weight:bold; text-align:center; color:var(--primary-color);" readonly>
@@ -149,14 +195,19 @@
         <ul id="previousCodesList" class="history-list"></ul>
     </div>
 
-    <!-- مصنع المساعدين بعد إصلاح الـ IDs وضمان قبول المدخلات بدون رسائل خطأ -->
+    <!-- مصنع المساعدين المطور مع كودات تطوير المدرسين المخصصة والتصفير المباشر -->
     <div class="card" style="border: 2px solid #1b4d3e; background: #f0f4f1;">
-        <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🛠️ مصنع المساعدين والمواد:</label>
+        <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🛠️ مصنع المساعدين والمواد للأساتذة المطورين:</label>
         <div class="factory-flex-row">
-            <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة بالإنجليزي (مثل: french)" style="margin:0;">
-            <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: مساعد الفرنسي 🇨🇵)" style="margin:0;">
+            <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة (مثال: french)" style="margin:0;">
+            <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: مساعد الفرنسي)" style="margin:0;">
         </div>
         <button onclick="addNewCustomBotSubject()" class="btn-prime" style="margin-top:8px; padding:10px;">➕ إنشاء وتفعيل المادة فوراً</button>
+        
+        <div style="margin-top:15px; border-top:1px dashed #a5d6a7; padding-top:10px;">
+            <div style="font-weight:bold; font-size:14px; color:var(--primary-color); margin-bottom:5px;">🔑 رموز دخول وإدارة الأساتذة المطورين الحاليين:</div>
+            <div id="devCodesManagementContainer" style="font-size:13px; display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
     </div>
 
     <div class="card">
@@ -193,6 +244,7 @@
         globalMessage: "أعزائي التلاميذ، يرجى تصفح المحاور والدروس عبر الفلاتر الذكية بداخل كل مراجعة. بالتوفيق لكم!",
         subjectsOrder: ['philosophy', 'arabic'],
         usedCodes: [],
+        devCodes: { philosophy: "DEV-PHILOSOPHY-7712", arabic: "DEV-ARABIC-4921" }, // أكواد الأساتذة المطورين
         philosophy: {
             robotName: "المساعد الفلسفي الذكي 🧠",
             welcome: "مرحباً بك في فضاء الفلسفة. تصفح المحاور العامة بالأسفل للوصول للملخصات والكويزات.",
@@ -202,8 +254,11 @@
     };
 
     let studentCurrentPath = []; 
+    let devCurrentPath = []; 
     let adminCurrentPathIndices = []; 
+    let devCurrentPathIndices = [];
     let activeSubject = 'philosophy';
+    let sessionDevSubject = ''; // لتحديد أي بوت يفتحه الأستاذ الضيف
 
     function unlockAudioContext() {
         ['soundClick', 'soundMsgBot', 'soundQuizCorrect', 'soundQuizWrong'].forEach(id => {
@@ -219,6 +274,7 @@
             academyData = JSON.parse(localData); 
             if(!academyData.subjectsOrder) academyData.subjectsOrder = ['philosophy', 'arabic'];
             if(!academyData.usedCodes) academyData.usedCodes = [];
+            if(!academyData.devCodes) academyData.devCodes = {};
         }
     }
 
@@ -228,6 +284,7 @@
         document.getElementById('loginHeaderDesc').innerText = academyData.login.desc;
         document.getElementById('admStudentCode').value = academyData.studentAccessCode;
         updateUsedCodesUI();
+        renderDevCodesManagerUI();
 
         const sessionAuth = sessionStorage.getItem('fakhri_authenticated_session');
         if(sessionAuth) {
@@ -236,6 +293,16 @@
                 document.getElementById('adminPanel').style.display = 'block'; 
                 buildAdminSelectOptions(); 
                 loadSubjectData(); 
+            } else if(sessionAuth === 'developer') {
+                sessionDevSubject = sessionStorage.getItem('fakhri_dev_active_subject');
+                // فحص الطرد الفوري قبل التحميل
+                const activeDevCode = sessionStorage.getItem('fakhri_dev_logged_code');
+                if(academyData.devCodes[sessionDevSubject] !== activeDevCode) {
+                    handle طردالأستاذ();
+                    return;
+                }
+                document.getElementById('developerApp').style.display = 'flex';
+                loadDevSubjectData();
             } else { 
                 document.getElementById('studentApp').style.display = 'flex'; 
                 renderHubView(); 
@@ -252,43 +319,61 @@
         if(academyData.subjectsOrder.includes(currentSelVal)) select.value = currentSelVal;
     }
 
-    // إصلاح مصنع المساعدين: قراءة دقيقة ومعالجة صحيحة بدون رسائل خطأ وهمية
     function addNewCustomBotSubject() {
         const idInput = document.getElementById('newBotIdInput');
         const nameInput = document.getElementById('newBotNameInput');
-        
         const rawId = idInput.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
         const name = nameInput.value.trim();
         
-        if(!rawId || !name) { 
-            alert("⚠️ يرجى ملء معرف المادة والاسم المعروض!"); 
-            return; 
-        }
+        if(!rawId || !name) { alert("⚠️ يرجى ملء معرف المادة والاسم المعروض!"); return; }
         
         academyData[rawId] = { robotName: name, welcome: `مرحباً بك في المساعد الآلي لـ (${name})`, tree: [] };
         academyData.subjectsOrder.push(rawId);
-        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
         
-        idInput.value = ""; 
-        nameInput.value = "";
+        // توليد كود تطوير تلقائي للأستاذ الجديد
+        const rand = Math.floor(1000 + Math.random() * 9000);
+        academyData.devCodes[rawId] = `DEV-${rawId.toUpperCase()}-${rand}`;
+        
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
+        idInput.value = ""; nameInput.value = "";
         
         buildAdminSelectOptions(); 
         document.getElementById('admSubject').value = rawId; 
         loadSubjectData();
-        alert("🟢 تم إضافة وتفعيل المادة الجديدة بنجاح وبشكل احترافي!");
+        renderDevCodesManagerUI();
+        alert("🟢 تم إضافة وتفعيل المادة وإنشاء رمز الأستاذ المطور بنجاح!");
     }
 
-    // إصلاح لوحة الكودات: توليد عشوائي، تصفير، وتخزين السجل السنوي
+    // إدارة وتحديث وعرض أكواد الأساتذة المطورين مع أزرار التصفير
+    function renderDevCodesManagerUI() {
+        const container = document.getElementById('devCodesManagementContainer');
+        if(!container) return;
+        container.innerHTML = "";
+        academyData.subjectsOrder.forEach(sub => {
+            const code = academyData.devCodes[sub] || "لا يوجد كود نشط";
+            const div = document.createElement('div');
+            div.style = "background:#fff; padding:8px; border:1px solid #cbd5e0; border-radius:6px; display:flex; justify-content:space-between; align-items:center;";
+            div.innerHTML = `<div><b>${academyData[sub]?academyData[sub].robotName:sub}:</b> <code style="color:#2e7d32; font-weight:bold;">${code}</code></div>
+            <button onclick="resetDevCode('${sub}')" style="background:#c62828; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 تصفير وإتلاف القديم</button>`;
+            container.appendChild(div);
+        });
+    }
+
+    function resetDevCode(sub) {
+        if(!confirm(`⚠️ هل أنت متأكد من إتلاف رمز الأستاذ الحالي لبوت (${sub}) وتوليد رمز جديد وطرد الحالي؟`)) return;
+        const rand = Math.floor(1000 + Math.random() * 9000);
+        academyData.devCodes[sub] = `DEV-${sub.toUpperCase()}-${rand}`;
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
+        renderDevCodesManagerUI();
+        alert("🔄 تم إتلاف الرمز السابق وتوليد رمز جديد صالح فوراً! أي عملية حفظ قادمة للأستاذ المطرود ستفشل تلقائياً.");
+    }
+
     function generateNewStudentCode() {
         const currentCode = academyData.studentAccessCode;
-        if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) {
-            academyData.usedCodes.push(currentCode);
-        }
-        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        let randomPart = '';
+        if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) { academyData.usedCodes.push(currentCode); }
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let randomPart = '';
         for (let i = 0; i < 4; i++) { randomPart += chars.charAt(Math.floor(Math.random() * chars.length)); }
         const newCode = `PROF-2026-${randomPart}`;
-        
         academyData.studentAccessCode = newCode;
         document.getElementById('admStudentCode').value = newCode;
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
@@ -297,9 +382,7 @@
 
     function resetStudentCode() {
         const currentCode = academyData.studentAccessCode;
-        if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) {
-            academyData.usedCodes.push(currentCode);
-        }
+        if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) { academyData.usedCodes.push(currentCode); }
         academyData.studentAccessCode = "لا يوجد كود نشط";
         document.getElementById('admStudentCode').value = "لا يوجد كود نشط";
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
@@ -307,108 +390,115 @@
     }
 
     function updateUsedCodesUI() {
-        const listElement = document.getElementById('previousCodesList');
-        if(!listElement) return;
+        const listElement = document.getElementById('previousCodesList'); if(!listElement) return;
         listElement.innerHTML = '';
-        if(academyData.usedCodes.length === 0) {
-            listElement.innerHTML = `<li style="color:#aaa;">لا توجد أكواد مستعملة سابقاً بعد.</li>`;
-            return;
-        }
+        if(academyData.usedCodes.length === 0) { listElement.innerHTML = `<li style="color:#aaa;">لا توجد أكواد مستعملة سابقاً بعد.</li>`; return; }
         academyData.usedCodes.forEach(code => {
-            const li = document.createElement('li');
-            li.style = "padding: 4px 0; color: #c62828; font-weight: bold;";
-            li.innerText = `🔒 ${code} (مستعمل ومحظور)`;
-            listElement.appendChild(li);
+            const li = document.createElement('li'); li.style = "padding: 4px 0; color: #c62828; font-weight: bold;";
+            li.innerText = `🔒 ${code} (مستعمل ومحظور)`; listElement.appendChild(li);
         });
     }
 
     function deleteCurrentBotSubject() {
         const currentSub = document.getElementById('admSubject').value;
         if(!confirm("🗑 هل تريد الحذف نهائياً؟")) return;
-        academyData.subjectsOrder = academyData.subjectsOrder.filter(k => k !== currentSub); delete academyData[currentSub];
-        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); buildAdminSelectOptions(); loadSubjectData();
+        academyData.subjectsOrder = academyData.subjectsOrder.filter(k => k !== currentSub); delete academyData[currentSub]; delete academyData.devCodes[currentSub];
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); buildAdminSelectOptions(); loadSubjectData(); renderDevCodesManagerUI();
     }
 
     function handleLogin() {
         unlockAudioContext(); setTimeout(() => { playSound('soundClick'); }, 50); refreshDataFromStorage();
         const code = document.getElementById('accessCode').value.trim();
-        if (code === "Fakhri@Prof2026") { sessionStorage.setItem('fakhri_authenticated_session', 'admin'); location.reload(); } 
-        else if (code === academyData.studentAccessCode && code !== "لا يوجد كود نشط") {
+        
+        if (code === "Fakhri@Prof2026") { 
+            sessionStorage.setItem('fakhri_authenticated_session', 'admin'); location.reload(); 
+            return;
+        } 
+        
+        if (code === academyData.studentAccessCode && code !== "لا يوجد كود نشط") {
             sessionStorage.setItem('fakhri_authenticated_session', 'student'); location.reload();
-        } else { alert("❌ كود المرور غير صحيح أو غير مفعل!"); }
+            return;
+        }
+
+        // فحص محاولة دخول أستاذ مطور ضيف عبر الأكواد المخصصة للمواد
+        let foundSub = null;
+        for(let sub in academyData.devCodes) {
+            if(academyData.devCodes[sub] === code) { foundSub = sub; break; }
+        }
+        if(foundSub) {
+            sessionStorage.setItem('fakhri_authenticated_session', 'developer');
+            sessionStorage.setItem('fakhri_dev_active_subject', foundSub);
+            sessionStorage.setItem('fakhri_dev_logged_code', code);
+            location.reload();
+            return;
+        }
+        
+        alert("❌ كود المرور غير صحيح أو منتهي الصلاحية!");
     }
 
-    function logout() { sessionStorage.removeItem('fakhri_authenticated_session'); location.reload(); }
+    function logout() { 
+        sessionStorage.removeItem('fakhri_authenticated_session'); 
+        sessionStorage.removeItem('fakhri_dev_active_subject');
+        sessionStorage.removeItem('fakhri_dev_logged_code');
+        location.reload(); 
+    }
+
+    function handleطردالأستاذ() {
+        sessionStorage.clear();
+        document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; box-sizing:border-box; font-family:sans-serif;">
+            <div style="font-size:60px; margin-bottom:20px;">⚠️</div>
+            <div style="font-size:24px; font-weight:bold; color:#ffcdd2;">تنبيه! انت خارج خدمة و تطوير هذا البوت ،</div>
+            <p style="color:#aaa; margin-top:10px; max-width:400px;">لقد تم تصفير وإتلاف كود الدخول الخاص بك من قبل مدير المنصة.</p>
+        </div>`;
+    }
+
+    function checkDevTokenValidity() {
+        refreshDataFromStorage();
+        const currentSavedCode = academyData.devCodes[sessionDevSubject];
+        const activeDevCode = sessionStorage.getItem('fakhri_dev_logged_code');
+        if(currentSavedCode !== activeDevCode) {
+            handleطردالأستاذ();
+            return false;
+        }
+        return true;
+    }
 
     function renderHubView() {
-        refreshDataFromStorage(); 
-        document.getElementById('chatScreen').style.display = 'none'; 
-        document.getElementById('hubScreen').style.display = 'flex';
+        refreshDataFromStorage(); document.getElementById('chatScreen').style.display = 'none'; document.getElementById('hubScreen').style.display = 'flex';
         document.getElementById('hubAnnouncement').innerText = academyData.globalMessage;
-        
-        const listContainer = document.getElementById('botsContainerList'); 
-        listContainer.innerHTML = "";
-        
+        const listContainer = document.getElementById('botsContainerList'); listContainer.innerHTML = "";
         academyData.subjectsOrder.forEach(sub => {
             if(!academyData[sub]) return;
-            const card = document.createElement('div'); card.className = "bot-card"; 
-            card.onclick = () => { openBotChat(sub); };
-            
-            // استخراج الإيموجي أو استخدام الإيموجي الافتراضي لضمان المظهر
-            let icon = "🤖";
-            if(academyData[sub].robotName.includes("🧠")) icon = "🧠";
-            if(academyData[sub].robotName.includes("✍️")) icon = "✍️";
-            
+            const card = document.createElement('div'); card.className = "bot-card"; card.onclick = () => { openBotChat(sub); };
             card.innerHTML = `<div style="display:flex; align-items:center; gap:12px;"><span style="font-size:34px;">🤖</span><div><div class="bot-card-name">${academyData[sub].robotName}</div><div class="bot-card-status">● متصل وجاهز</div></div></div>`;
             listContainer.appendChild(card);
         });
     }
 
-    // إصلاح مشكلة الصفحة الخضراء الفارغة عند نقر التلميذ + تعميم الميزات لجميع البوتات المضافة حديثاً
     function openBotChat(subject) {
-        refreshDataFromStorage(); 
-        activeSubject = subject; 
-        studentCurrentPath = []; 
-        
-        // إخفاء الـ Hub وإظهار مساحة الشات كاملة ومجهزة بالكامل
-        document.getElementById('hubScreen').style.display = 'none'; 
-        document.getElementById('chatScreen').style.display = 'flex';
-        
-        // تحديد الرمز والاسم ديناميكياً بناءً على ما أنشأه الأستاذ في المصنع
+        refreshDataFromStorage(); activeSubject = subject; studentCurrentPath = []; 
+        document.getElementById('hubScreen').style.display = 'none'; document.getElementById('chatScreen').style.display = 'flex';
         document.getElementById('headerRobotName').innerText = academyData[subject].robotName;
-        
-        const chatContainer = document.getElementById('chatContainer');
-        chatContainer.innerHTML = ""; // تصفير المحادثة السابقة
-        
-        // إطلاق الرسالة الترحيبية الاحترافية فوراً للبوت المختار
-        addChatMsg(academyData[subject].welcome, 'bot', '', true); 
-        renderStudentButtons();
+        const chatContainer = document.getElementById('chatContainer'); chatContainer.innerHTML = "";
+        addChatMsg(academyData[subject].welcome, 'bot', '', true); renderStudentButtons();
     }
 
     function backToHub() { playSound('soundClick'); renderHubView(); }
-    
     function getCurrentTreeLevelForStudent() {
         let level = academyData[activeSubject].tree; studentCurrentPath.forEach(index => { if(level[index] && level[index].children) level = level[index].children; }); return level;
     }
 
     function renderStudentButtons() {
-        const optsBox = document.getElementById('optionsContainer'); optsBox.innerHTML = "";
-        const currentLevelItems = getCurrentTreeLevelForStudent();
-        
+        const optsBox = document.getElementById('optionsContainer'); optsBox.innerHTML = ""; const currentLevelItems = getCurrentTreeLevelForStudent();
         if(studentCurrentPath.length > 0) {
             const btnBackLevel = document.createElement('button'); btnBackLevel.className = "opt-btn back-level-btn"; btnBackLevel.innerText = "↩️ رجوع";
-            btnBackLevel.onclick = () => { playSound('soundClick'); studentCurrentPath.pop(); renderStudentButtons(); };
-            optsBox.appendChild(btnBackLevel);
+            btnBackLevel.onclick = () => { playSound('soundClick'); studentCurrentPath.pop(); renderStudentButtons(); }; optsBox.appendChild(btnBackLevel);
         }
-        
         if(currentLevelItems) {
             currentLevelItems.forEach((item, index) => {
                 const btn = document.createElement('button'); btn.innerText = item.title;
-                if(item.type === 'folder') {
-                    btn.className = "opt-btn folder-btn"; btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); };
-                } else {
-                    btn.className = "opt-btn"; btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); };
-                }
+                if(item.type === 'folder') { btn.className = "opt-btn folder-btn"; btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); }; } 
+                else { btn.className = "opt-btn"; btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); }; }
                 optsBox.appendChild(btn);
             });
         }
@@ -441,22 +531,21 @@
         else { playSound('soundQuizWrong'); btn.style.background = "#ffcdd2"; btn.innerHTML += " ❌ خاطئ (الصحيح: " + correct + ")"; }
     }
 
+    function execEditorCmd(cmd, value = null) { document.execCommand(cmd, false, value); }
+
+    // ----------- آليات إدارة وتحرير المدير فخري -----------
     function getAdminCurrentLevel() {
         const sub = document.getElementById('admSubject').value; if(!academyData[sub]) return [];
         let level = academyData[sub].tree; adminCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
     }
-
     function loadSubjectData() {
         refreshDataFromStorage();
         document.getElementById('admLoginTitle').value = academyData.login.title; document.getElementById('admLoginDesc').value = academyData.login.desc;
-        document.getElementById('admGlobalMsg').value = academyData.globalMessage; document.getElementById('admStudentCode').value = academyData.studentAccessCode;
+        document.getElementById('admGlobalMsg').value = academyData.globalMessage;
         const sub = document.getElementById('admSubject').value; if(!sub) return;
         document.getElementById('admRobotName').value = academyData[sub] ? academyData[sub].robotName : "";
         document.getElementById('admWelcome').value = academyData[sub] ? academyData[sub].welcome : ""; renderAdminTree();
     }
-
-    function execEditorCmd(cmd, value = null) { document.execCommand(cmd, false, value); }
-
     function renderAdminTree() {
         const container = document.getElementById('treeAdminContainer'); container.innerHTML = ""; const pathLabel = document.getElementById('adminTreePath');
         if(adminCurrentPathIndices.length === 0) { pathLabel.innerText = "🌳 شجرة المحاور الرئيسية للبوت:"; } 
@@ -468,39 +557,18 @@
         const currentItems = getAdminCurrentLevel();
         currentItems.forEach((b, index) => {
             const div = document.createElement('div'); div.className = "card"; let extraHtml = "";
-            if(b.type === 'folder') {
-                extraHtml = `<button onclick="diveIntoAdminFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`;
-            } else {
+            if(b.type === 'folder') { extraHtml = `<button onclick="diveIntoAdminFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
+            else {
                 extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateNodeField(${index}, 'type', this.value); renderAdminTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
-                    extraHtml += `
-                        <label>مضمون الشرح وخيارات الخطوط والألوان (Word) 📝:</label>
-                        <div class="editor-toolbar">
-                            <button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button>
-                            <button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button>
-                            <button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button>
-                            <select class="editor-select" onchange="execEditorCmd('fontSize', this.value)">
-                                <option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option><option value="6">كبير جداً</option>
-                            </select>
-                            <select class="editor-select" onchange="execEditorCmd('foreColor', this.value)">
-                                <option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option>
-                            </select>
-                        </div>
-                        <div id="wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div>
-                        <label>روابط الصور متبوعة بفاصلة ( , ):</label>
-                        <textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>
-                    `;
-                } else if(b.type === 'pdf') {
-                    extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`;
-                } else if(b.type === 'quiz') {
-                    extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة الرقمية/النصية:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`;
-                }
+                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`; } 
+                else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`; }
             }
             div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
             container.appendChild(div);
         });
     }
-
     function diveIntoAdminFolder(idx) { adminCurrentPathIndices.push(idx); renderAdminTree(); }
     function updateNodeField(idx, field, val) { getAdminCurrentLevel()[idx][field] = val; }
     function updateNodeImages(idx, val) { getAdminCurrentLevel()[idx].images = val.split(','); }
@@ -508,17 +576,127 @@
     function changeNodeType(idx, metaType) { const level = getAdminCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderAdminTree(); }
     function addNodeAtCurrentLevel() { getAdminCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); renderAdminTree(); }
     function deleteNode(idx) { if(confirm("🗑️ هل أنت متأكد من الحذف؟")) { getAdminCurrentLevel().splice(idx, 1); renderAdminTree(); } }
-
     function saveAdminData() {
-        academyData.login.title = document.getElementById('admLoginTitle').value;
-        academyData.login.desc = document.getElementById('admLoginDesc').value;
-        academyData.globalMessage = document.getElementById('admGlobalMsg').value;
-        
-        const sub = document.getElementById('admSubject').value;
+        academyData.login.title = document.getElementById('admLoginTitle').value; academyData.login.desc = document.getElementById('admLoginDesc').value;
+        academyData.globalMessage = document.getElementById('admGlobalMsg').value; const sub = document.getElementById('admSubject').value;
         if(sub && academyData[sub]) { academyData[sub].robotName = document.getElementById('admRobotName').value; academyData[sub].welcome = document.getElementById('admWelcome').value; }
-        
+        localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام للموقع بالكامل!");
+    }
+
+
+    // ----------- واجهة ومميزات الأستاذ المطور الضيف (نفس الخصائص والشكل تلوين الشجر) -----------
+    function getDevCurrentLevel() {
+        if(!academyData[sessionDevSubject]) return [];
+        let level = academyData[sessionDevSubject].tree; devCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
+    }
+
+    function loadDevSubjectData() {
+        if(!checkDevTokenValidity()) return;
+        document.getElementById('devSubjectTitle').innerText = academyData[sessionDevSubject] ? academyData[sessionDevSubject].robotName : sessionDevSubject;
+        document.getElementById('devRobotName').value = academyData[sessionDevSubject] ? academyData[sessionDevSubject].robotName : "";
+        document.getElementById('devWelcome').value = academyData[sessionDevSubject] ? academyData[sessionDevSubject].welcome : "";
+        renderDevTree();
+        refreshDevChatPreview();
+    }
+
+    function renderDevTree() {
+        const container = document.getElementById('treeDevContainer'); container.innerHTML = ""; const pathLabel = document.getElementById('devTreePath');
+        if(devCurrentPathIndices.length === 0) { pathLabel.innerText = "🌳 شجرة المحاور الخاصة بمادتك:"; } 
+        else {
+            pathLabel.innerText = "📂 التعديل داخل محور فرعي محدد:";
+            const btnBackDev = document.createElement('button'); btnBackDev.style = "background:#cbd5e0; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; margin-bottom:10px;";
+            btnBackDev.innerText = "↩️ رجوع للمستوى الأعلى"; btnBackDev.onclick = () => { devCurrentPathIndices.pop(); renderDevTree(); }; container.appendChild(btnBackDev);
+        }
+        const currentItems = getDevCurrentLevel();
+        currentItems.forEach((b, index) => {
+            const div = document.createElement('div'); div.className = "card"; let extraHtml = "";
+            if(b.type === 'folder') { extraHtml = `<button onclick="diveIntoDevFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
+            else {
+                extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateDevNodeField(${index}, 'type', this.value); renderDevTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
+                if(b.type === 'text') {
+                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="dev_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" onblur="updateDevNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateDevNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateDevNodeField(${index}, 'content', this.value)">`; } 
+                else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateDevNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateDevNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateDevNodeField(${index}, 'correct', this.value)">`; }
+            }
+            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateDevNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeDevNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteDevNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
+            container.appendChild(div);
+        });
+    }
+
+    function diveIntoDevFolder(idx) { devCurrentPathIndices.push(idx); renderDevTree(); }
+    function updateDevNodeField(idx, field, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx][field] = val; }
+    function updateDevNodeImages(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].images = val.split(','); }
+    function updateDevNodeQuizOptions(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].options = val.split(','); }
+    function changeDevNodeType(idx, metaType) { if(!checkDevTokenValidity()) return; const level = getDevCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderDevTree(); }
+    function addNodeAtCurrentDevLevel() { if(!checkDevTokenValidity()) return; getDevCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); renderDevTree(); }
+    function deleteDevNode(idx) { if(!checkDevTokenValidity()) return; if(confirm("🗑️ هل أنت متأكد من حذف هذا الزر؟")) { getDevCurrentLevel().splice(idx, 1); renderDevTree(); } }
+
+    function saveDevDataOnly() {
+        if(!checkDevTokenValidity()) return;
+        if(sessionDevSubject && academyData[sessionDevSubject]) {
+            academyData[sessionDevSubject].robotName = document.getElementById('devRobotName').value;
+            academyData[sessionDevSubject].welcome = document.getElementById('devWelcome').value;
+        }
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-        alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام للموقع بالكامل!");
+        alert("💾 تم حفظ وتثبيت تعديلات مادتك فقط في قاعدة البيانات الموحدة بنجاح!");
+        refreshDevChatPreview();
+    }
+
+    // شاشة معاينة المحادثة المستهدفة المباشرة للأستاذ المطور
+    function refreshDevChatPreview() {
+        if(!checkDevTokenValidity()) return;
+        devCurrentPath = [];
+        document.getElementById('devHeaderRobotName').innerText = document.getElementById('devRobotName').value;
+        const box = document.getElementById('devChatContainer'); box.innerHTML = "";
+        
+        const div = document.createElement('div'); div.className = "msg bot";
+        div.innerText = document.getElementById('devWelcome').value;
+        box.appendChild(div);
+        renderDevPreviewButtons();
+    }
+
+    function getDevPreviewTreeLevel() {
+        let level = academyData[sessionDevSubject].tree; devCurrentPath.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
+    }
+
+    function renderDevPreviewButtons() {
+        const optsBox = document.getElementById('devOptionsContainer'); optsBox.innerHTML = "";
+        const currentItems = getDevPreviewTreeLevel();
+        if(devCurrentPath.length > 0) {
+            const btnBack = document.createElement('button'); btnBack.className = "opt-btn back-level-btn"; btnBack.innerText = "↩️ رجوع";
+            btnBack.onclick = () => { devCurrentPath.pop(); renderDevPreviewButtons(); }; optsBox.appendChild(btnBack);
+        }
+        if(currentItems) {
+            currentItems.forEach((item, index) => {
+                const btn = document.createElement('button'); btn.innerText = item.title;
+                if(item.type === 'folder') {
+                    btn.className = "opt-btn folder-btn"; btn.onclick = () => { devCurrentPath.push(index); renderDevPreviewButtons(); };
+                } else {
+                    btn.className = "opt-btn"; btn.onclick = () => { handleDevPreviewButtonAction(item); };
+                }
+                optsBox.appendChild(btn);
+            });
+        }
+    }
+
+    function handleDevPreviewButtonAction(b) {
+        const box = document.getElementById('devChatContainer');
+        const userDiv = document.createElement('div'); userDiv.className = "msg user"; userDiv.innerText = b.title;
+        box.appendChild(userDiv); box.scrollTop = box.scrollHeight;
+        
+        setTimeout(() => {
+            const botDiv = document.createElement('div'); botDiv.className = "msg bot";
+            if(b.type === 'text') {
+                let imgHtml = ""; if(b.images && b.images.length > 0) { imgHtml = `<div class="gallery-container">`; b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); imgHtml += `</div>`; }
+                botDiv.innerHTML = `<div style="direction:rtl; text-align:right;">${b.content}</div>${imgHtml}`;
+            } else if(b.type === 'pdf') {
+                botDiv.innerHTML = `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" style="color:#2e7d32; font-weight:bold;">📥 فتح ملف PDF</a>`;
+            } else if(b.type === 'quiz') {
+                let html = `❓ <b>${b.question}</b><br><br>`; b.options.forEach(opt => { html += `<button class="quiz-option-btn" disabled>${opt}</button>`; });
+                botDiv.innerHTML = html;
+            }
+            box.appendChild(botDiv); box.scrollTop = box.scrollHeight;
+        }, 300);
     }
 
     window.addEventListener('blur', () => { document.getElementById('shieldScreen').style.display = 'block'; });
@@ -526,3 +704,4 @@
 </script>
 </body>
 </html>
+                                     
