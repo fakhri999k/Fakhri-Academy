@@ -53,14 +53,13 @@
         .opt-btn.folder-btn { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .opt-btn.back-level-btn { background: #ffebee; border-color: #ffcdd2; color: #c62828; }
         
-        /* تعديل الرسالة لإضافة علامتي المشاهدة الفسفورية بشكل واقعي */
-        .msg { max-width: 82%; padding: 12px 16px 24px 16px; border-radius: 16px; font-size: 15px; line-height: 1.6; word-wrap: break-word; position: relative; }
+        /* ضبط الرسائل بحيث تظهر علامة الصح الفسفورية فقط وحصرياً لرسائل المبعوث (المستخدم) */
+        .msg { max-width: 82%; padding: 12px 16px 12px 16px; border-radius: 16px; font-size: 15px; line-height: 1.6; word-wrap: break-word; position: relative; }
         .msg.bot { background: #f0f4f1; align-self: flex-start; border-top-left-radius: 2px; color: #2d3748; }
-        .msg.user { background: var(--secondary-color); color: white; align-self: flex-end; border-top-right-radius: 2px; }
+        .msg.user { background: var(--secondary-color); color: white; align-self: flex-end; border-top-right-radius: 2px; padding-bottom: 24px; }
         
-        /* علامتا المشاهدة الفسفورية أسفل كل رسالة */
-        .msg-ticks { position: absolute; bottom: 4px; left: 14px; font-size: 12px; color: #00ff66; font-weight: bold; letter-spacing: -1px; user-select: none; }
-        .msg.user .msg-ticks { left: auto; right: 14px; color: #00ff66; }
+        /* إبقاء علامتي المشاهدة الفسفورية لرسائل المستخدم فقط */
+        .msg-ticks { position: absolute; bottom: 4px; right: 14px; font-size: 12px; color: #00ff66; font-weight: bold; letter-spacing: -1px; user-select: none; }
         
         .gallery-container { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
         .gallery-container img { max-width: 100%; border-radius: 8px; }
@@ -154,7 +153,6 @@
         
         <div class="card">
             <label style="font-weight:bold; color: var(--secondary-color);">🤖 اسم البوت المخصص (معين من قبل الإدارة):</label>
-            <!-- جعل الحقل للقراءة فقط بناءً على طلبك لتنفرد أنت بالتسمية -->
             <input type="text" id="devRobotName" class="admin-input" disabled style="background-color: #e2e8f0; color: #4a5568; cursor: not-allowed; font-weight: bold;">
             <label style="font-weight:bold; margin-top:10px; display:block;">💬 رسالة ترحيب البوت المخصصة:</label>
             <textarea id="devWelcome" class="admin-input" rows="2"></textarea>
@@ -181,7 +179,7 @@
                     </div>
                 </div>
                 <div style="display:flex; gap:6px;">
-                    <button onclick="refreshDevChatPreview()" class="btn-back" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4);">🔄 تصفير</button>
+                    <!-- تم إزالة زر التصفير تماماً بناءً على رغبتك والإبقاء على الرجوع فقط -->
                     <button onclick="closeDevPreviewMode()" class="btn-back" style="background:#d32f2f; border:none;">🔙 رجوع للوحة</button>
                 </div>
             </div>
@@ -515,8 +513,8 @@
         if(sender === 'bot' && !isWelcome) setTimeout(() => { playSound('soundMsgBot'); }, 100);
         const box = document.getElementById('chatContainer'); const div = document.createElement('div'); div.className = `msg ${sender}`;
         
-        // بناء علامتي المشاهدة الفسفورية في أسفل محتوى الرسالة للاستخدام الطلابي
-        const ticksHtml = `<span class="msg-ticks">✓✓</span>`;
+        // تم إزالة علامتي الصح من رسائل البوت وحصرها في رسائل المستخدم (المبعوث) فقط لمحاكاة الواقع
+        const ticksHtml = sender === 'user' ? `<span class="msg-ticks">✓✓</span>` : "";
         
         if(htmlContent) div.innerHTML = htmlContent + ticksHtml; else div.innerHTML = text + ticksHtml; 
         box.appendChild(div); box.scrollTop = box.scrollHeight;
@@ -524,6 +522,7 @@
 
     function handleSpecialButtonAction(b) {
         addChatMsg(b.title, 'user');
+        // تعديل زمن الاستجابة إلى 3 ثوانٍ (3000 ملي ثانية) لمحاكاة محادثة واقعية تماماً بناءً على طلبك
         setTimeout(() => {
             if(b.type === 'text') {
                 let imgHtml = ""; if(b.images && b.images.length > 0) { imgHtml = `<div class="gallery-container">`; b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); imgHtml += `</div>`; }
@@ -534,7 +533,7 @@
                 let html = `❓ <b>${b.question}</b><br><br>`; b.options.forEach(opt => { html += `<button class="quiz-option-btn" onclick="checkQuizAnswer(this, '${opt}', '${b.correct}')">${opt}</button>`; });
                 addChatMsg("", 'bot', html);
             }
-        }, 350);
+        }, 3000);
     }
 
     function checkQuizAnswer(btn, selected, correct) {
@@ -572,7 +571,7 @@
             else {
                 extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateNodeField(${index}, 'type', this.value); renderAdminTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
-                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="adm_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
                 } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`; } 
                 else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`; }
             }
@@ -638,7 +637,6 @@
     function updateDevNodeQuizOptions(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].options = val.split(','); }
     function changeDevNodeType(idx, metaType) { if(!checkDevTokenValidity()) return; const level = getDevCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderDevTree(); }
     
-    /* تم إصلاح الدالة بناءً على طلبك لتجعل الأستاذ يضيف أزراراً جديدة بحرية كاملة دون أي خلل */
     function addNodeAtCurrentDevLevel() { 
         if(!checkDevTokenValidity()) return; 
         getDevCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); 
@@ -647,14 +645,24 @@
     
     function deleteDevNode(idx) { if(!checkDevTokenValidity()) return; if(confirm("🗑️ هل أنت متأكد من حذف هذا الزر؟")) { getDevCurrentLevel().splice(idx, 1); renderDevTree(); } }
 
+    /* تم تحديث وتفعيل دالة حفظ بيانات المطور بالكامل لتجمع البيانات من الحقول المفتوحة وتخزنها لحظياً */
     function saveDevDataOnly() {
         if(!checkDevTokenValidity()) return;
+        
+        // جلب وتحديث النصوص المفتوحة حالياً داخل المحاور الفرعية في الـ WYSIWYG قبل الحفظ النهائي لضمان عدم ضياعها
+        const currentItems = getDevCurrentLevel();
+        currentItems.forEach((b, index) => {
+            if(b.type === 'text') {
+                const editorEl = document.getElementById(`dev_wysiwyg_${index}`);
+                if(editorEl) { b.content = editorEl.innerHTML; }
+            }
+        });
+
         if(sessionDevSubject && academyData[sessionDevSubject]) {
-            // يتم الحفاظ على اسم البوت المسجل مسبقاً وتعديل الرسالة الترحيبية فقط
             academyData[sessionDevSubject].welcome = document.getElementById('devWelcome').value;
         }
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-        alert("💾 تم حفظ وتثبيت تعديلات مادتك فقط في قاعدة البيانات الموحدة بنجاح!");
+        alert("💾 تم حفظ وتثبيت تعديلات مادتك ومحتويات الأزرار في قاعدة البيانات الموحدة بنجاح!");
     }
 
     /* الانتقال إلى وضع المعاينة بملء الشاشة */
@@ -674,13 +682,12 @@
     function refreshDevChatPreview() {
         if(!checkDevTokenValidity()) return;
         devCurrentPath = [];
-        // يعرض الاسم الثابت المخزن مسبقاً
         document.getElementById('devHeaderRobotName').innerText = academyData[sessionDevSubject].robotName;
         const box = document.getElementById('devChatContainer'); box.innerHTML = "";
         
-        // بناء رسالة البوت الترحيبية في وضع المعاينة مع علامات المشاهدة الفسفورية
+        // بناء رسالة البوت الترحيبية بدون علامات المشاهدة الفسفورية (محاكاة للواقع)
         const div = document.createElement('div'); div.className = "msg bot";
-        div.innerHTML = document.getElementById('devWelcome').value + `<span class="msg-ticks">✓✓</span>`;
+        div.innerHTML = document.getElementById('devWelcome').value;
         box.appendChild(div);
         renderDevPreviewButtons();
     }
@@ -713,10 +720,11 @@
         const box = document.getElementById('devChatContainer');
         const userDiv = document.createElement('div'); userDiv.className = "msg user"; 
         
-        // إضافة علامات المشاهدة الفسفورية في وضع المعاينة
+        // إبقاء علامات المشاهدة الفسفورية لرسالة المستخدم المبعوثة فقط
         userDiv.innerHTML = b.title + `<span class="msg-ticks">✓✓</span>`;
         box.appendChild(userDiv); box.scrollTop = box.scrollHeight;
         
+        // إضافة تأخير زمني 3 ثوانٍ (3000 ملي ثانية) لمحاكاة محادثة واقعية تماماً قبل الرد
         setTimeout(() => {
             const botDiv = document.createElement('div'); botDiv.className = "msg bot";
             let innerContent = "";
@@ -730,10 +738,10 @@
                 innerContent = html;
             }
             
-            // دمج علامات المشاهدة الفسفورية مع رد البوت في المعاينة
-            botDiv.innerHTML = innerContent + `<span class="msg-ticks">✓✓</span>`;
+            // رد البوت يظهر نظيفاً بدون أي علامات صح لمحاكاة دردشات الحقيقة
+            botDiv.innerHTML = innerContent;
             box.appendChild(botDiv); box.scrollTop = box.scrollHeight;
-        }, 300);
+        }, 3000);
     }
 
     window.addEventListener('blur', () => { document.getElementById('shieldScreen').style.display = 'block'; });
