@@ -233,7 +233,7 @@
         <button onclick="addNodeAtCurrentLevel()" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر جديد في هذا المستوى</button>
     </div>
 
-    <button onclick="saveAdminData()" class="btn-prime" style="margin-bottom:30px; width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32);">💾 حفظ ونشر كافة التعديلات وتثبيتها للطلاب</button>
+    <button onclick="saveAdminData()" class="btn-prime" style="margin-bottom:30px; width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32); shadow: 0 4px 6px rgba(0,0,0,0.15);">💾 حفظ ونشر كافة التعديلات وتثبيتها للطلاب</button>
 </div>
 
 <script>
@@ -490,7 +490,7 @@
             btnBackLevel.onclick = () => { playSound('soundClick'); studentCurrentPath.pop(); renderStudentButtons(); }; optsBox.appendChild(btnBackLevel);
         }
         if(currentLevelItems) {
-            currentLevelItems.forEach((item, index) => {
+            currentItems.forEach((item, index) => {
                 const btn = document.createElement('button'); btn.innerText = item.title;
                 if(item.type === 'folder') { btn.className = "opt-btn folder-btn"; btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); }; } 
                 else { btn.className = "opt-btn"; btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); }; }
