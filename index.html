@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>أكاديمية فخري الرقمية</title>
-    <!-- تضمين مكتبات Firebase الرسمية للتشغيل والمزامنة اللحظية -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <!-- تضمين مكتبات Firebase السحابية الرسمية -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary-color: #1b4d3e;      
@@ -52,7 +54,7 @@
         .chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; background: #ffffff; }
         .options-area { padding: 15px 12px 25px 12px; background: #f0f4f1; display: flex; flex-direction: row; overflow-x: auto; gap: 10px; border-top: 2px solid #cbd5e0; flex-shrink: 0; width: 100%; box-sizing: border-box; }
         
-        .opt-btn { background: #ffffff; color: var(--text-color); border: 2px solid #a5d6a7; padding: 10px 20px; border-radius: 24px; cursor: pointer; font-size: 14px; font-weight: bold; flex-shrink: 0; box-shadow: 0 3px 6px rgba(0,0,0,0.08); white-space: nowrap; touch-action: manipulation; }
+        .opt-btn { background: #ffffff; color: var(--text-color); border: 2px solid #a5d6a7; padding: 10px 20px; border-radius: 24px; cursor: pointer; font-size: 14px; font-weight: bold; flex-shrink: 0; box-shadow: 0 3px 6px rgba(0,0,0,0.08); white-space: nowrap; }
         .opt-btn.folder-btn { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .opt-btn.back-level-btn { background: #ffebee; border-color: #ffcdd2; color: #c62828; }
         
@@ -100,14 +102,14 @@
     <div class="login-content">
         <div style="font-size: 40px; margin-bottom: 5px;">🎓</div>
         <div class="login-title" id="loginHeaderTitle">أكاديمية أستاذ فخري الرقمية</div>
-        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;" id="loginHeaderDesc">مرحباً بك في المنصة الذكية الآمنة لتجربة تعليمية غامرة.</div>
+        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;" id="loginHeaderDesc">جاري تحميل البيئة السحابية الآمنة...</div>
         
         <div style="font-size:13px; color:#ffebee; background:rgba(211,47,47,0.25); padding:10px; border-radius:8px; margin-bottom:15px; font-weight: bold; border: 1px solid #ef5350;">
             تنبيه: هذا الكود يستعمل من أجل تفعيل حسابك فقط!
         </div>
         
         <input type="password" id="accessCode" class="input-field" placeholder="أدخل كود المرور الخاص بك">
-        <button id="btnLoginAction" class="btn-prime">فتح المنصة الآن</button>
+        <button onclick="handleLogin()" class="btn-prime">فتح المنصة الآن</button>
     </div>
 </div>
 
@@ -143,7 +145,7 @@
         <h2 style="color: var(--primary-color); border-bottom: 2px solid #cbd5e0; padding-bottom: 8px; margin-top:0;">🛠️ لوحة تطوير مادة: <span id="devSubjectTitle" style="color:var(--secondary-color);">...</span></h2>
         
         <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button id="btnDevPreview" style="background:var(--secondary-color); color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; flex: 1; font-size:14px; box-shadow:0 3px 6px rgba(0,0,0,0.1);">👁️ تجربة ومعاينة البوت</button>
+            <button onclick="switchToDevPreviewMode()" style="background:var(--secondary-color); color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; flex: 1; font-size:14px; box-shadow:0 3px 6px rgba(0,0,0,0.1);">👁️ تجربة ومعاينة البوت</button>
             <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px;">خروج 🔒</button>
         </div>
         
@@ -157,10 +159,10 @@
         <div class="card" style="background: #eef2ef;">
             <div style="font-weight:bold; margin-bottom:10px; color: var(--primary-color);" id="devTreePath">🌳 شجرة المحاور الخاصة بمادتك:</div>
             <div id="treeDevContainer"></div>
-            <button id="btnDevAddNode" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر جديد في هذا المستوى</button>
+            <button onclick="addNodeAtCurrentDevLevel()" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر جديد في هذا المستوى</button>
         </div>
 
-        <button id="btnDevSaveData" class="btn-prime" style="width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32); padding: 14px; font-size: 16px;">💾 حفظ وتثبيت تعديلات المادة الحالية فقط</button>
+        <button onclick="saveDevDataOnly(true)" class="btn-prime" style="width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32); padding: 14px; font-size: 16px;">💾 حفظ وتثبيت تعديلات المادة في Firebase</button>
     </div>
     
     <div id="devPreviewModal" class="dev-preview-modal">
@@ -191,8 +193,8 @@
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🔑 كود دخول الطلاب الحالي:</label>
         <input type="text" id="admStudentCode" class="admin-input" style="font-weight:bold; text-align:center; color:var(--primary-color);" readonly>
         <div class="code-flex-row">
-            <button id="btnGenStudentCode" class="btn-prime" style="margin:0; background:#2e7d32; padding:10px;">🔄 توليد كود جديد</button>
-            <button id="btnResetStudentCode" class="btn-prime" style="margin:0; background:#c62828; padding:10px;">🧹 تصفير الكود</button>
+            <button onclick="generateNewStudentCode()" class="btn-prime" style="margin:0; background:#2e7d32; padding:10px;">🔄 توليد كود جديد</button>
+            <button onclick="resetStudentCode()" class="btn-prime" style="margin:0; background:#c62828; padding:10px;">🧹 تصفير الكود</button>
         </div>
         <div style="margin-top:12px; font-weight:bold; font-size:13px; color:#333;">📋 الكودات السنوية المحظورة والمستعملة قديماً:</div>
         <ul id="previousCodesList" class="history-list"></ul>
@@ -204,7 +206,7 @@
             <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة (مثال: french)" style="margin:0;">
             <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: مساعد الفرنسي)" style="margin:0;">
         </div>
-        <button id="btnAddNewBotSubject" class="btn-prime" style="margin-top:8px; padding:10px;">➕ إنشاء وتفعيل المادة فوراً</button>
+        <button onclick="addNewCustomBotSubject()" class="btn-prime" style="margin-top:8px; padding:10px;">➕ إنشاء وتفعيل المادة فوراً</button>
         
         <div style="margin-top:15px; border-top:1px dashed #a5d6a7; padding-top:10px;">
             <div style="font-weight:bold; font-size:14px; color:var(--primary-color); margin-bottom:5px;">🔑 رموز دخول وإدارة الأساتذة المطورين الحاليين:</div>
@@ -227,26 +229,36 @@
         <input type="text" id="admRobotName" class="admin-input">
         <label style="font-weight:bold;">💬 رسالة ترحيب البوت المخصصة:</label>
         <textarea id="admWelcome" class="admin-input" rows="2"></textarea>
-        <button id="btnDeleteBotSubject" style="background:#ffcdd2; color:#b71c1c; border:none; padding:6px 12px; border-radius:6px; margin-top:10px; font-weight:bold; cursor:pointer; width:100%;">🗑️ حذف هذه المادة بالكامل</button>
+        <button onclick="deleteCurrentBotSubject()" style="background:#ffcdd2; color:#b71c1c; border:none; padding:6px 12px; border-radius:6px; margin-top:10px; font-weight:bold; cursor:pointer; width:100%;">🗑️ حذف هذه المادة بالكامل</button>
     </div>
 
     <div class="card" style="background: #eef2ef;">
         <div style="font-weight:bold; margin-bottom:10px; color: var(--primary-color);" id="adminTreePath">🌳 شجرة المحاور الرئيسية للبوت:</div>
         <div id="treeAdminContainer"></div>
-        <button id="btnAdminAddNode" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر جديد في هذا المستوى</button>
+        <button onclick="addNodeAtCurrentLevel()" style="background:var(--secondary-color); color:white; border:none; padding:10px; border-radius:8px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">➕ إضافة زر جديد في هذا المستوى</button>
     </div>
 
-    <button id="btnAdminSaveData" class="btn-prime" style="margin-bottom:30px; width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32);">💾 حفظ ونشر كافة التعديلات وتثبيتتها للطلاب</button>
+    <button onclick="saveAdminData()" class="btn-prime" style="margin-bottom:30px; width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32);">💾 حفظ ونشر كافة التعديلات وتثبيتها سحابياً</button>
 </div>
 
 <script>
-    // تكوين اتصال الـ Firebase الخاص بقاعدة بياناتك المفتوحة
+    // إعدادات مشروع Firebase المخصصة لك بالكامل (fakhri-academy)
     const firebaseConfig = {
-        databaseURL: "https://fakhri-secure-lms-default-rtdb.firebaseio.com" 
+        apiKey: "AIzaSyDl3IBCCRToCJBGg-G-53TlelCQVhAFhOE",
+        authDomain: "fakhri-academy.firebaseapp.com",
+        databaseURL: "https://fakhri-academy-default-rtdb.firebaseio.com",
+        projectId: "fakhri-academy",
+        storageBucket: "fakhri-academy.firebasestorage.app",
+        messagingSenderId: "696675192485",
+        appId: "1:696675192485:web:8d9bcede7939da82d3c74c",
+        measurementId: "G-DWRNP247RX"
     };
-    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-    const dbRef = firebase.database().ref("academy_global_db");
 
+    // تهيئة Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // البنية الافتراضية الاحتياطية في حال كانت قاعدة البيانات فارغة تماماً عند أول تشغيل
     let academyData = {
         login: { title: "أكاديمية أستاذ فخري الرقمية", desc: "مرحباً بك في المنصة الذكية الآمنة لتجربة تعليمية غامرة." },
         studentAccessCode: "PROF-2026-X83B", 
@@ -269,22 +281,6 @@
     let activeSubject = 'philosophy';
     let sessionDevSubject = ''; 
 
-    // دالة لمس متوافقة مع الهواتف والأجهزة اللوحية لحل تجمد الأزرار
-    function bindMobileFriendlyClick(elementId, callback) {
-        const el = document.getElementById(elementId);
-        if (!el) return;
-        let triggered = false;
-        el.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            triggered = true;
-            callback();
-        }, { passive: false });
-        el.addEventListener('click', function(e) {
-            if (triggered) { triggered = false; return; }
-            callback();
-        });
-    }
-
     function unlockAudioContext() {
         ['soundClick', 'soundMsgBot', 'soundQuizCorrect', 'soundQuizWrong'].forEach(id => {
             const a = document.getElementById(id); a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
@@ -293,69 +289,60 @@
 
     function playSound(soundId) { try { const s = document.getElementById(soundId); s.currentTime = 0; s.play(); } catch(e) {} }
 
-    // سحب وتحديث المزامنة لحظياً وبشكل كامل من خادم Firebase مباشرة
-    function refreshDataFromStorage(syncToFirebaseToo = false, callback = null) {
-        dbRef.once('value').then((snapshot) => {
-            if(snapshot.exists()) {
-                 academyData = snapshot.val();
-                 if(!academyData.subjectsOrder) academyData.subjectsOrder = ['philosophy', 'arabic'];
-                 if(!academyData.usedCodes) academyData.usedCodes = [];
-                 if(!academyData.devCodes) academyData.devCodes = {};
-                 localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-                 if(callback) callback();
-            } else {
-                 if(syncToFirebaseToo) { dbRef.set(academyData); }
-                 if(callback) callback();
-            }
-        }).catch(() => {
-            const localData = localStorage.getItem('fakhri_annual_secure_db');
-            if(localData) { academyData = JSON.parse(localData); }
-            if(callback) callback();
-        });
-    }
-
-    window.onload = function() {
-        refreshDataFromStorage(true, function() {
-            document.getElementById('loginHeaderTitle').innerText = academyData.login.title;
-            document.getElementById('loginHeaderDesc').innerText = academyData.login.desc;
-            document.getElementById('admStudentCode').value = academyData.studentAccessCode;
-            updateUsedCodesUI();
-            renderDevCodesManagerUI();
-
-            const sessionAuth = sessionStorage.getItem('fakhri_authenticated_session');
-            if(sessionAuth) {
-                document.getElementById('loginScreen').style.display = 'none';
-                if(sessionAuth === 'admin') { 
-                    document.getElementById('adminPanel').style.display = 'block'; 
-                    buildAdminSelectOptions(); 
-                    loadSubjectData(); 
-                } else if(sessionAuth === 'developer') {
+    // الاستماع اللحظي لقاعدة بيانات Firebase
+    function initFirebaseSync() {
+        db.ref('academyData').on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                academyData = snapshot.val();
+                // ضمان وجود المصفوفات والحقول الأساسية لمنع الأخطاء البرمجية
+                if(!academyData.subjectsOrder) academyData.subjectsOrder = [];
+                if(!academyData.usedCodes) academyData.usedCodes = [];
+                if(!academyData.devCodes) academyData.devCodes = {};
+                
+                // تحديث واجهة تسجيل الدخول بشكل مباشر من السيرفر
+                document.getElementById('loginHeaderTitle').innerText = academyData.login.title;
+                document.getElementById('loginHeaderDesc').innerText = academyData.login.desc;
+                
+                // تحديث لوحة التحكم إذا كانت مفتوحة
+                const sessionAuth = sessionStorage.getItem('fakhri_authenticated_session');
+                if (sessionAuth === 'admin') {
+                    document.getElementById('admStudentCode').value = academyData.studentAccessCode;
+                    updateUsedCodesUI();
+                    renderDevCodesManagerUI();
+                    buildAdminSelectOptions();
+                } else if (sessionAuth === 'developer') {
                     sessionDevSubject = sessionStorage.getItem('fakhri_dev_active_subject');
                     const activeDevCode = sessionStorage.getItem('fakhri_dev_logged_code');
                     if(academyData.devCodes[sessionDevSubject] !== activeDevCode) {
                         handleDevExpulsion();
                         return;
                     }
-                    document.getElementById('developerApp').style.display = 'flex';
                     loadDevSubjectData();
-                } else { 
-                    document.getElementById('studentApp').style.display = 'flex'; 
-                    renderHubView(); 
+                } else if (sessionAuth === 'student') {
+                    renderHubView();
                 }
+            } else {
+                // رفع البنية الافتراضية أول مرة إذا كانت الداتابيز فارغة
+                db.ref('academyData').set(academyData);
             }
-
-            // ربط أحداث الضغط الحيوية مع حزمة الحماية لتعمل على الهواتف دون تجميد
-            bindMobileFriendlyClick('btnLoginAction', handleLogin);
-            bindMobileFriendlyClick('btnDevPreview', switchToDevPreviewMode);
-            bindMobileFriendlyClick('btnDevAddNode', addNodeAtCurrentDevLevel);
-            bindMobileFriendlyClick('btnDevSaveData', saveDevDataOnly);
-            bindMobileFriendlyClick('btnGenStudentCode', generateNewStudentCode);
-            bindMobileFriendlyClick('btnResetStudentCode', resetStudentCode);
-            bindMobileFriendlyClick('btnAddNewBotSubject', addNewCustomBotSubject);
-            bindMobileFriendlyClick('btnDeleteBotSubject', deleteCurrentBotSubject);
-            bindMobileFriendlyClick('btnAdminAddNode', addNodeAtCurrentLevel);
-            bindMobileFriendlyClick('btnAdminSaveData', saveAdminData);
         });
+    }
+
+    window.onload = function() {
+        initFirebaseSync();
+
+        const sessionAuth = sessionStorage.getItem('fakhri_authenticated_session');
+        if(sessionAuth) {
+            document.getElementById('loginScreen').style.display = 'none';
+            if(sessionAuth === 'admin') { 
+                document.getElementById('adminPanel').style.display = 'block'; 
+                loadSubjectData(); 
+            } else if(sessionAuth === 'developer') {
+                document.getElementById('developerApp').style.display = 'flex';
+            } else { 
+                document.getElementById('studentApp').style.display = 'flex'; 
+            }
+        }
     }
 
     function buildAdminSelectOptions() {
@@ -381,32 +368,21 @@
         const rand = Math.floor(1000 + Math.random() * 9000);
         academyData.devCodes[rawId] = `DEV-${rawId.toUpperCase()}-${rand}`;
         
-        dbRef.set(academyData).then(() => {
-            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-            idInput.value = ""; nameInput.value = "";
-            buildAdminSelectOptions(); 
-            document.getElementById('admSubject').value = rawId; 
-            loadSubjectData();
-            renderDevCodesManagerUI();
-            alert("🟢 تم إضافة وتفعيل المادة وحفظها بـ Firebase بنجاح!");
-        });
+        db.ref('academyData').set(academyData);
+        idInput.value = ""; nameInput.value = "";
+        alert("🟢 تم إضافة وتفعيل المادة سحابياً بنجاح!");
     }
 
     function renderDevCodesManagerUI() {
         const container = document.getElementById('devCodesManagementContainer');
-        if(!container) return;
-        container.innerHTML = "";
+        if(!container) return; container.innerHTML = "";
         academyData.subjectsOrder.forEach(sub => {
             const code = academyData.devCodes[sub] || "لا يوجد كود نشط";
             const div = document.createElement('div');
             div.style = "background:#fff; padding:8px; border:1px solid #cbd5e0; border-radius:6px; display:flex; justify-content:space-between; align-items:center;";
             div.innerHTML = `<div><b>${academyData[sub]?academyData[sub].robotName:sub}:</b> <code style="color:#2e7d32; font-weight:bold;">${code}</code></div>
-            <button id="btnResetDev_${sub}" style="background:#c62828; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 تصفير وإتلاف القديم</button>`;
+            <button onclick="resetDevCode('${sub}')" style="background:#c62828; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 تصفير وإتلاف القديم</button>`;
             container.appendChild(div);
-            
-            setTimeout(() => {
-                bindMobileFriendlyClick(`btnResetDev_${sub}`, function() { resetDevCode(sub); });
-            }, 50);
         });
     }
 
@@ -414,11 +390,7 @@
         if(!confirm(`⚠️ هل أنت متأكد من إتلاف رمز الأستاذ الحالي لبوت (${sub}) وتوليد رمز جديد وطرد الحالي؟`)) return;
         const rand = Math.floor(1000 + Math.random() * 9000);
         academyData.devCodes[sub] = `DEV-${sub.toUpperCase()}-${rand}`;
-        dbRef.set(academyData).then(() => {
-            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-            renderDevCodesManagerUI();
-            alert("🔄 تم إتلاف الرمز السابق وتوليد رمز جديد بنجاح!");
-        });
+        db.ref('academyData').set(academyData);
     }
 
     function generateNewStudentCode() {
@@ -426,32 +398,21 @@
         if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) { academyData.usedCodes.push(currentCode); }
         const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let randomPart = '';
         for (let i = 0; i < 4; i++) { randomPart += chars.charAt(Math.floor(Math.random() * chars.length)); }
-        const newCode = `PROF-2026-${randomPart}`;
-        academyData.studentAccessCode = newCode;
-        document.getElementById('admStudentCode').value = newCode;
-        
-        dbRef.set(academyData).then(() => {
-            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-            updateUsedCodesUI();
-        });
+        academyData.studentAccessCode = `PROF-2026-${randomPart}`;
+        db.ref('academyData').set(academyData);
     }
 
     function resetStudentCode() {
         const currentCode = academyData.studentAccessCode;
         if(currentCode && currentCode !== "لا يوجد كود نشط" && !academyData.usedCodes.includes(currentCode)) { academyData.usedCodes.push(currentCode); }
         academyData.studentAccessCode = "لا يوجد كود نشط";
-        document.getElementById('admStudentCode').value = "لا يوجد كود نشط";
-        
-        dbRef.set(academyData).then(() => {
-            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-            updateUsedCodesUI();
-        });
+        db.ref('academyData').set(academyData);
     }
 
     function updateUsedCodesUI() {
         const listElement = document.getElementById('previousCodesList'); if(!listElement) return;
         listElement.innerHTML = '';
-        if(!academyData.usedCodes || academyData.usedCodes.length === 0) { listElement.innerHTML = `<li style="color:#aaa;">لا توجد أكواد مستعملة سابقاً بعد.</li>`; return; }
+        if(academyData.usedCodes.length === 0) { listElement.innerHTML = `<li style="color:#aaa;">لا توجد أكواد مستعملة سابقاً بعد.</li>`; return; }
         academyData.usedCodes.forEach(code => {
             const li = document.createElement('li'); li.style = "padding: 4px 0; color: #c62828; font-weight: bold;";
             li.innerText = `🔒 ${code} (مستعمل ومحظور)`; listElement.appendChild(li);
@@ -462,55 +423,49 @@
         const currentSub = document.getElementById('admSubject').value;
         if(!confirm("🗑 هل تريد الحذف نهائياً؟")) return;
         academyData.subjectsOrder = academyData.subjectsOrder.filter(k => k !== currentSub); delete academyData[currentSub]; delete academyData.devCodes[currentSub];
-        dbRef.set(academyData).then(() => {
-            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); buildAdminSelectOptions(); loadSubjectData(); renderDevCodesManagerUI();
-        });
+        db.ref('academyData').set(academyData);
     }
 
     function handleLogin() {
         unlockAudioContext(); setTimeout(() => { playSound('soundClick'); }, 50);
-        refreshDataFromStorage(false, function() {
-            const code = document.getElementById('accessCode').value.trim();
-            
-            if (code === "Fakhri@Prof2026") { 
-                sessionStorage.setItem('fakhri_authenticated_session', 'admin'); location.reload(); 
-                return;
-            } 
-            
-            if (code === academyData.studentAccessCode && code !== "لا يوجد كود نشط") {
-                sessionStorage.setItem('fakhri_authenticated_session', 'student'); location.reload();
-                return;
-            }
+        const code = document.getElementById('accessCode').value.trim();
+        
+        if (code === "Fakhri@Prof2026") { 
+            sessionStorage.setItem('fakhri_authenticated_session', 'admin'); location.reload(); 
+            return;
+        } 
+        
+        if (code === academyData.studentAccessCode && code !== "لا يوجد كود نشط") {
+            sessionStorage.setItem('fakhri_authenticated_session', 'student'); location.reload();
+            return;
+        }
 
-            let foundSub = null;
-            for(let sub in academyData.devCodes) {
-                if(academyData.devCodes[sub] === code) { foundSub = sub; break; }
-            }
-            if(foundSub) {
-                sessionStorage.setItem('fakhri_authenticated_session', 'developer');
-                sessionStorage.setItem('fakhri_dev_active_subject', foundSub);
-                sessionStorage.setItem('fakhri_dev_logged_code', code);
-                location.reload();
-                return;
-            }
-            
-            alert("❌ كود المرور غير صحيح أو منتهي الصلاحية!");
-        });
+        let foundSub = null;
+        for(let sub in academyData.devCodes) {
+            if(academyData.devCodes[sub] === code) { foundSub = sub; break; }
+        }
+        if(foundSub) {
+            sessionStorage.setItem('fakhri_authenticated_session', 'developer');
+            sessionStorage.setItem('fakhri_dev_active_subject', foundSub);
+            sessionStorage.setItem('fakhri_dev_logged_code', code);
+            location.reload();
+            return;
+        }
+        
+        alert("❌ كود المرور غير صحيح أو منتهي الصلاحية!");
     }
 
     function logout() { 
-        sessionStorage.removeItem('fakhri_authenticated_session'); 
-        sessionStorage.removeItem('fakhri_dev_active_subject');
-        sessionStorage.removeItem('fakhri_dev_logged_code');
+        sessionStorage.clear();
         location.reload(); 
     }
 
     function handleDevExpulsion() {
         sessionStorage.clear();
-        document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; box-sizing:border-box; font-family:sans-serif;">
+        document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; box-sizing:border-box;">
             <div style="font-size:60px; margin-bottom:20px;">⚠️</div>
-            <div style="font-size:24px; font-weight:bold; color:#ffcdd2;">تنبيه! انت خارج خدمة و تطوير هذا البوت ،</div>
-            <p style="color:#aaa; margin-top:10px; max-width:400px;">لقد تم تصفير وإتلاف كود الدخول الخاص بك من قبل مدير المنصة.</p>
+            <div style="font-size:24px; font-weight:bold; color:#ffcdd2;">تنبيه! أنت خارج خدمة هذا البوت،</div>
+            <p style="color:#aaa; margin-top:10px; max-width:400px;">لقد تم تصفير كود الوصول الخاص بك من قبل مدير المنصة.</p>
         </div>`;
     }
 
@@ -518,42 +473,32 @@
         const currentSavedCode = academyData.devCodes[sessionDevSubject];
         const activeDevCode = sessionStorage.getItem('fakhri_dev_logged_code');
         if(currentSavedCode !== activeDevCode) {
-            handleDevExpulsion();
-            return false;
+            handleDevExpulsion(); return false;
         }
         return true;
     }
 
     function renderHubView() {
-        refreshDataFromStorage(false, function() {
-            document.getElementById('chatScreen').style.display = 'none'; document.getElementById('hubScreen').style.display = 'flex';
-            document.getElementById('hubAnnouncement').innerText = academyData.globalMessage;
-            const listContainer = document.getElementById('botsContainerList'); listContainer.innerHTML = "";
-            academyData.subjectsOrder.forEach((sub, idx) => {
-                if(!academyData[sub]) return;
-                const card = document.createElement('div'); card.className = "bot-card"; card.id = `botCardStudent_${sub}`;
-                card.innerHTML = `<div style="display:flex; align-items:center; gap:12px;"><span style="font-size:34px;">🤖</span><div><div class="bot-card-name">${academyData[sub].robotName}</div><div class="bot-card-status">● متصل وجاهز</div></div></div>`;
-                listContainer.appendChild(card);
-                
-                setTimeout(() => {
-                    bindMobileFriendlyClick(`botCardStudent_${sub}`, function() { openBotChat(sub); });
-                }, 50);
-            });
+        document.getElementById('chatScreen').style.display = 'none'; document.getElementById('hubScreen').style.display = 'flex';
+        document.getElementById('hubAnnouncement').innerText = academyData.globalMessage;
+        const listContainer = document.getElementById('botsContainerList'); listContainer.innerHTML = "";
+        academyData.subjectsOrder.forEach(sub => {
+            if(!academyData[sub]) return;
+            const card = document.createElement('div'); card.className = "bot-card"; card.onclick = () => { openBotChat(sub); };
+            card.innerHTML = `<div style="display:flex; align-items:center; gap:12px;"><span style="font-size:34px;">🤖</span><div><div class="bot-card-name">${academyData[sub].robotName}</div><div class="bot-card-status">● متصل وجاهز</div></div></div>`;
+            listContainer.appendChild(card);
         });
     }
 
     function openBotChat(subject) {
-        refreshDataFromStorage(false, function() {
-            activeSubject = subject; studentCurrentPath = []; 
-            document.getElementById('hubScreen').style.display = 'none'; document.getElementById('chatScreen').style.display = 'flex';
-            document.getElementById('headerRobotName').innerText = academyData[subject].robotName;
-            const chatContainer = document.getElementById('chatContainer'); chatContainer.innerHTML = "";
-            addChatMsg(academyData[subject].welcome, 'bot', '', true); renderStudentButtons();
-        });
+        activeSubject = subject; studentCurrentPath = []; 
+        document.getElementById('hubScreen').style.display = 'none'; document.getElementById('chatScreen').style.display = 'flex';
+        document.getElementById('headerRobotName').innerText = academyData[subject].robotName;
+        const chatContainer = document.getElementById('chatContainer'); chatContainer.innerHTML = "";
+        addChatMsg(academyData[subject].welcome, 'bot', '', true); renderStudentButtons();
     }
 
     function backToHub() { playSound('soundClick'); renderHubView(); }
-    
     function getCurrentTreeLevelForStudent() {
         let level = academyData[activeSubject].tree; studentCurrentPath.forEach(index => { if(level[index] && level[index].children) level = level[index].children; }); return level;
     }
@@ -561,26 +506,15 @@
     function renderStudentButtons() {
         const optsBox = document.getElementById('optionsContainer'); optsBox.innerHTML = ""; const currentLevelItems = getCurrentTreeLevelForStudent();
         if(studentCurrentPath.length > 0) {
-            const btnBackLevel = document.createElement('button'); btnBackLevel.id = "btnStudentBackLevel"; btnBackLevel.className = "opt-btn back-level-btn"; btnBackLevel.innerText = "↩️ رجوع";
-            optsBox.appendChild(btnBackLevel);
-            setTimeout(() => {
-                bindMobileFriendlyClick('btnStudentBackLevel', function() { playSound('soundClick'); studentCurrentPath.pop(); renderStudentButtons(); });
-            }, 10);
+            const btnBackLevel = document.createElement('button'); btnBackLevel.className = "opt-btn back-level-btn"; btnBackLevel.innerText = "↩️ رجوع";
+            btnBackLevel.onclick = () => { playSound('soundClick'); studentCurrentPath.pop(); renderStudentButtons(); }; optsBox.appendChild(btnBackLevel);
         }
         if(currentLevelItems) {
             currentLevelItems.forEach((item, index) => {
-                const btn = document.createElement('button'); btn.innerText = item.title; btn.id = `btnStudentOpt_${index}`;
-                if(item.type === 'folder') { btn.className = "opt-btn folder-btn"; } 
-                else { btn.className = "opt-btn"; }
+                const btn = document.createElement('button'); btn.innerText = item.title;
+                if(item.type === 'folder') { btn.className = "opt-btn folder-btn"; btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); }; } 
+                else { btn.className = "opt-btn"; btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); }; }
                 optsBox.appendChild(btn);
-                
-                setTimeout(() => {
-                    bindMobileFriendlyClick(`btnStudentOpt_${index}`, function() {
-                        playSound('soundClick');
-                        if(item.type === 'folder') { studentCurrentPath.push(index); renderStudentButtons(); }
-                        else { handleSpecialButtonAction(item); }
-                    });
-                }, 10);
             });
         }
     }
@@ -597,24 +531,22 @@
         addChatMsg(b.title, 'user');
         setTimeout(() => {
             if(b.type === 'text') {
-                let imgHtml = ""; if(b.images && b.images.length > 0) { imgHtml = `<div class="gallery-container">`; b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); imgHtml += `</div>`; }
+                let imgHtml = ""; 
+                if(b.images && b.images.length > 0) { 
+                    imgHtml = `<div class="gallery-container">`; 
+                    b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); 
+                    imgHtml += `</div>`; 
+                }
                 addChatMsg("", 'bot', `<div style="direction:rtl; text-align:right;">${b.content}</div>${imgHtml}`);
             } else if(b.type === 'pdf') {
                 addChatMsg("", 'bot', `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" style="color:#2e7d32; font-weight:bold;">📥 فتح ملف PDF</a>`);
             } else if(b.type === 'quiz') {
-                let html = `❓ <b>${b.question}</b><br><br>`; b.options.forEach((opt, oIdx) => { html += `<button id="btnQuizOpt_${oIdx}" class="quiz-option-btn">${opt}</button>`; });
+                let html = `❓ <b>${b.question}</b><br><br>`; 
+                const validOptions = (b.options || []).filter(o => o.trim() !== '');
+                validOptions.forEach(opt => { html += `<button class="quiz-option-btn" onclick="checkQuizAnswer(this, '${opt.trim()}', '${b.correct}')">${opt.trim()}</button>`; });
                 addChatMsg("", 'bot', html);
-                
-                b.options.forEach((opt, oIdx) => {
-                    setTimeout(() => {
-                        bindMobileFriendlyClick(`btnQuizOpt_${oIdx}`, function() {
-                            const currentBtn = document.getElementById(`btnQuizOpt_${oIdx}`);
-                            checkQuizAnswer(currentBtn, opt, b.correct);
-                        });
-                    }, 50);
-                });
             }
-        }, 1500);
+        }, 3000);
     }
 
     function checkQuizAnswer(btn, selected, correct) {
@@ -643,14 +575,13 @@
         if(adminCurrentPathIndices.length === 0) { pathLabel.innerText = "🌳 شجرة المحاور الرئيسية للبوت:"; } 
         else {
             pathLabel.innerText = "📂 التعديل داخل محور فرعي محدد:";
-            const btnBackAdmin = document.createElement('button'); btnBackAdmin.id = "btnAdminTreeBack"; btnBackAdmin.style = "background:#cbd5e0; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; margin-bottom:10px;";
-            btnBackAdmin.innerText = "↩️ رجوع للمستوى الأعلى"; container.appendChild(btnBackAdmin);
-            setTimeout(() => { bindMobileFriendlyClick('btnAdminTreeBack', function() { adminCurrentPathIndices.pop(); renderAdminTree(); }); }, 10);
+            const btnBackAdmin = document.createElement('button'); btnBackAdmin.style = "background:#cbd5e0; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; margin-bottom:10px;";
+            btnBackAdmin.innerText = "↩️ رجوع للمستوى الأعلى"; btnBackAdmin.onclick = () => { adminCurrentPathIndices.pop(); renderAdminTree(); }; container.appendChild(btnBackAdmin);
         }
         const currentItems = getAdminCurrentLevel();
         currentItems.forEach((b, index) => {
             const div = document.createElement('div'); div.className = "card"; let extraHtml = "";
-            if(b.type === 'folder') { extraHtml = `<button id="btnAdminDiveFolder_${index}" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
+            if(b.type === 'folder') { extraHtml = `<button onclick="diveIntoAdminFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
             else {
                 extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateNodeField(${index}, 'type', this.value); renderAdminTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
@@ -658,40 +589,25 @@
                 } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`; } 
                 else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`; }
             }
-            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button id="btnAdminDeleteNode_${index}" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
+            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
             container.appendChild(div);
-            
-            setTimeout(() => {
-                if(b.type === 'folder') bindMobileFriendlyClick(`btnAdminDiveFolder_${index}`, function() { diveIntoAdminFolder(index); });
-                bindMobileFriendlyClick(`btnAdminDeleteNode_${index}`, function() { deleteNode(index); });
-            }, 10);
         });
     }
     function diveIntoAdminFolder(idx) { adminCurrentPathIndices.push(idx); renderAdminTree(); }
     function updateNodeField(idx, field, val) { getAdminCurrentLevel()[idx][field] = val; }
-    function updateNodeImages(idx, val) { getAdminCurrentLevel()[idx].images = val.split(',').map(s => s.trim()).filter(Boolean); }
-    function updateNodeQuizOptions(idx, val) { getAdminCurrentLevel()[idx].options = val.split(',').map(s => s.trim()).filter(Boolean); }
+    function updateNodeImages(idx, val) { getAdminCurrentLevel()[idx].images = val.split(',').map(s => s.trim()); }
+    function updateNodeQuizOptions(idx, val) { getAdminCurrentLevel()[idx].options = val.split(',').map(s => s.trim()); }
     function changeNodeType(idx, metaType) { const level = getAdminCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderAdminTree(); }
     function addNodeAtCurrentLevel() { getAdminCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); renderAdminTree(); }
     function deleteNode(idx) { if(confirm("🗑️ هل أنت متأكد من الحذف؟")) { getAdminCurrentLevel().splice(idx, 1); renderAdminTree(); } }
     
     function saveAdminData() {
-        const currentItems = getAdminCurrentLevel();
-        currentItems.forEach((b, index) => {
-            if(b.type === 'text') {
-                const editorEl = document.getElementById(`adm_wysiwyg_${index}`);
-                if(editorEl) { b.content = editorEl.innerHTML; }
-            }
-        });
-
         academyData.login.title = document.getElementById('admLoginTitle').value; academyData.login.desc = document.getElementById('admLoginDesc').value;
         academyData.globalMessage = document.getElementById('admGlobalMsg').value; const sub = document.getElementById('admSubject').value;
         if(sub && academyData[sub]) { academyData[sub].robotName = document.getElementById('admRobotName').value; academyData[sub].welcome = document.getElementById('admWelcome').value; }
-        
-        // الرفع المباشر واللحظي إلى الـ Firebase
-        dbRef.set(academyData).then(() => {
-            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); 
-            alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام إلى خادم Firebase المباشر!");
+        // الرفع السحابي الفوري لـ Firebase
+        db.ref('academyData').set(academyData).then(() => {
+            alert("🎉 تم حفظ ومزامنة كافة التعديلات بنجاح سحابي تام على Firebase!");
         });
     }
 
@@ -713,14 +629,13 @@
         if(devCurrentPathIndices.length === 0) { pathLabel.innerText = "🌳 شجرة المحاور الخاصة بمادتك:"; } 
         else {
             pathLabel.innerText = "📂 التعديل داخل محور فرعي محدد:";
-            const btnBackDev = document.createElement('button'); btnBackDev.id = "btnDevTreeBack"; btnBackDev.style = "background:#cbd5e0; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; margin-bottom:10px;";
-            btnBackDev.innerText = "↩️ رجوع للمستوى الأعلى"; container.appendChild(btnBackDev);
-            setTimeout(() => { bindMobileFriendlyClick('btnDevTreeBack', function() { devCurrentPathIndices.pop(); renderDevTree(); }); }, 10);
+            const btnBackDev = document.createElement('button'); btnBackDev.style = "background:#cbd5e0; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer; margin-bottom:10px;";
+            btnBackDev.innerText = "↩️ رجوع للمستوى الأعلى"; btnBackDev.onclick = () => { devCurrentPathIndices.pop(); renderDevTree(); }; container.appendChild(btnBackDev);
         }
         const currentItems = getDevCurrentLevel();
         currentItems.forEach((b, index) => {
             const div = document.createElement('div'); div.className = "card"; let extraHtml = "";
-            if(b.type === 'folder') { extraHtml = `<button id="btnDevDiveFolder_${index}" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
+            if(b.type === 'folder') { extraHtml = `<button onclick="diveIntoDevFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
             else {
                 extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateDevNodeField(${index}, 'type', this.value); renderDevTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
@@ -728,34 +643,21 @@
                 } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateDevNodeField(${index}, 'content', this.value)">`; } 
                 else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateDevNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateDevNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateDevNodeField(${index}, 'correct', this.value)">`; }
             }
-            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateDevNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeDevNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button id="btnDevDeleteNode_${index}" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
+            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateDevNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeDevNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteDevNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
             container.appendChild(div);
-            
-            setTimeout(() => {
-                if(b.type === 'folder') bindMobileFriendlyClick(`btnDevDiveFolder_${index}`, function() { diveIntoDevFolder(index); });
-                bindMobileFriendlyClick(`btnDevDeleteNode_${index}`, function() { deleteDevNode(index); });
-            }, 10);
         });
     }
 
     function diveIntoDevFolder(idx) { devCurrentPathIndices.push(idx); renderDevTree(); }
     function updateDevNodeField(idx, field, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx][field] = val; }
-    function updateDevNodeImages(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].images = val.split(',').map(s => s.trim()).filter(Boolean); }
-    function updateDevNodeQuizOptions(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].options = val.split(',').map(s => s.trim()).filter(Boolean); }
+    function updateDevNodeImages(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].images = val.split(',').map(s => s.trim()); }
+    function updateDevNodeQuizOptions(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].options = val.split(',').map(s => s.trim()); }
     function changeDevNodeType(idx, metaType) { if(!checkDevTokenValidity()) return; const level = getDevCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderDevTree(); }
-    
-    function addNodeAtCurrentDevLevel() { 
-        if(!checkDevTokenValidity()) return; 
-        getDevCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); 
-        renderDevTree(); 
-    }
-    
+    function addNodeAtCurrentDevLevel() { if(!checkDevTokenValidity()) return; getDevCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); renderDevTree(); }
     function deleteDevNode(idx) { if(!checkDevTokenValidity()) return; if(confirm("🗑️ هل أنت متأكد من حذف هذا الزر؟")) { getDevCurrentLevel().splice(idx, 1); renderDevTree(); } }
 
-    // تعديل وإصلاح دالة حفظ المطور لترفع البيانات فوراً للسيرفر
-    function saveDevDataOnly() {
+    function saveDevDataOnly(showAlert = false) {
         if(!checkDevTokenValidity()) return;
-        
         const currentItems = getDevCurrentLevel();
         currentItems.forEach((b, index) => {
             if(b.type === 'text') {
@@ -763,29 +665,24 @@
                 if(editorEl) { b.content = editorEl.innerHTML; }
             }
         });
-
         if(sessionDevSubject && academyData[sessionDevSubject]) {
             academyData[sessionDevSubject].welcome = document.getElementById('devWelcome').value;
         }
-
-        // إرسال ومزامنة التحديث مع قاعدة البيانات بـ Firebase لمنع الاختفاء والضياع اللحظي
-        dbRef.set(academyData).then(() => {
-            localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-            alert("💾 تم حفظ وتثبيت تعديلات مادتك بنجاح تام ومزامنتها لحظياً مع سيرفر Firebase!");
-        }).catch((err) => {
-            alert("⚠️ فشل الاتصال بالسيرفر، تأكد من اتصال هاتفك بالإنترنت وقواعد الأمان.");
+        // الرفع السحابي لمادة الأستاذ المطور فقط دون التأثير على المواد الأخرى
+        db.ref('academyData').set(academyData).then(() => {
+            if(showAlert) { alert("💾 تم حفظ وتثبيت التعديلات سحابياً على خادم Firebase بنجاح!"); }
         });
     }
 
     function switchToDevPreviewMode() {
         if(!checkDevTokenValidity()) return;
+        saveDevDataOnly(false); 
         document.getElementById('devPanelMain').style.display = 'none';
         document.getElementById('devPreviewModal').style.display = 'flex';
         refreshDevChatPreview();
     }
 
     function closeDevPreviewMode() {
-        devCurrentPath = []; 
         document.getElementById('devPreviewModal').style.display = 'none';
         document.getElementById('devPanelMain').style.display = 'block';
     }
@@ -795,7 +692,6 @@
         devCurrentPath = [];
         document.getElementById('devHeaderRobotName').innerText = academyData[sessionDevSubject].robotName;
         const box = document.getElementById('devChatContainer'); box.innerHTML = "";
-        
         const div = document.createElement('div'); div.className = "msg bot";
         div.innerHTML = document.getElementById('devWelcome').value;
         box.appendChild(div);
@@ -810,23 +706,18 @@
         const optsBox = document.getElementById('devOptionsContainer'); optsBox.innerHTML = "";
         const currentItems = getDevPreviewTreeLevel();
         if(devCurrentPath.length > 0) {
-            const btnBack = document.createElement('button'); btnBack.id = "btnDevPreviewBack"; btnBack.className = "opt-btn back-level-btn"; btnBack.innerText = "↩️ رجوع";
-            optsBox.appendChild(btnBack);
-            setTimeout(() => { bindMobileFriendlyClick('btnDevPreviewBack', function() { devCurrentPath.pop(); renderDevPreviewButtons(); }); }, 10);
+            const btnBack = document.createElement('button'); btnBack.className = "opt-btn back-level-btn"; btnBack.innerText = "↩️ رجوع";
+            btnBack.onclick = () => { devCurrentPath.pop(); renderDevPreviewButtons(); }; optsBox.appendChild(btnBack);
         }
         if(currentItems) {
             currentItems.forEach((item, index) => {
-                const btn = document.createElement('button'); btn.innerText = item.title; btn.id = `btnDevPreviewOpt_${index}`;
-                if(item.type === 'folder') { btn.className = "opt-btn folder-btn"; } 
-                else { btn.className = "opt-btn"; }
+                const btn = document.createElement('button'); btn.innerText = item.title;
+                if(item.type === 'folder') {
+                    btn.className = "opt-btn folder-btn"; btn.onclick = () => { devCurrentPath.push(index); renderDevPreviewButtons(); };
+                } else {
+                    btn.className = "opt-btn"; btn.onclick = () => { handleDevPreviewButtonAction(item); };
+                }
                 optsBox.appendChild(btn);
-                
-                setTimeout(() => {
-                    bindMobileFriendlyClick(`btnDevPreviewOpt_${index}`, function() {
-                        if(item.type === 'folder') { devCurrentPath.push(index); renderDevPreviewButtons(); }
-                        else { handleDevPreviewButtonAction(item); }
-                    });
-                }, 10);
             });
         }
     }
@@ -841,18 +732,24 @@
             const botDiv = document.createElement('div'); botDiv.className = "msg bot";
             let innerContent = "";
             if(b.type === 'text') {
-                let imgHtml = ""; if(b.images && b.images.length > 0) { imgHtml = `<div class="gallery-container">`; b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); imgHtml += `</div>`; }
+                let imgHtml = ""; 
+                if(b.images && b.images.length > 0) { 
+                    imgHtml = `<div class="gallery-container">`; 
+                    b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); 
+                    imgHtml += `</div>`; 
+                }
                 innerContent = `<div style="direction:rtl; text-align:right;">${b.content}</div>${imgHtml}`;
             } else if(b.type === 'pdf') {
                 innerContent = `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" style="color:#2e7d32; font-weight:bold;">📥 فتح ملف PDF</a>`;
             } else if(b.type === 'quiz') {
-                let html = `❓ <b>${b.question}</b><br><br>`; b.options.forEach(opt => { html += `<button class="quiz-option-btn" disabled>${opt}</button>`; });
+                let html = `❓ <b>${b.question}</b><br><br>`; 
+                const validOptions = (b.options || []).filter(o => o.trim() !== '');
+                validOptions.forEach(opt => { html += `<button class="quiz-option-btn" disabled>${opt.trim()}</button>`; });
                 innerContent = html;
             }
-            
             botDiv.innerHTML = innerContent;
             box.appendChild(botDiv); box.scrollTop = box.scrollHeight;
-        }, 1500);
+        }, 3000);
     }
 
     window.addEventListener('blur', () => { document.getElementById('shieldScreen').style.display = 'block'; });
