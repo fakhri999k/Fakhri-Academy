@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>أكاديمية فخري الرقمية</title>
+    <title>أكاديمية أستاذ فخري الرقمية</title>
     <style>
         :root {
             --primary-color: #1b4d3e;      
@@ -356,7 +356,7 @@
     }
 
     function resetDevCode(sub) {
-        if(!confirm(`⚠️ هل أنت متأكد من إتلاف رمز الأستاذ الحالي لبوت (${sub}) وتوليد رمز جديد وطرد الحالي؟`)) return;
+        if(!confirm(`⚠️ هل أنت متأكد من إتلاف رمز الأستاذ الحالي لبوت (${sub}) وتوليد رمز جديد وطرد الحالي Simon؟`)) return;
         const rand = Math.floor(1000 + Math.random() * 9000);
         academyData.devCodes[sub] = `DEV-${sub.toUpperCase()}-${rand}`;
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
@@ -448,7 +448,6 @@
     }
 
     function checkDevTokenValidity() {
-        refreshDataFromStorage();
         const currentSavedCode = academyData.devCodes[sessionDevSubject];
         const activeDevCode = sessionStorage.getItem('fakhri_dev_logged_code');
         if(currentSavedCode !== activeDevCode) {
@@ -490,7 +489,7 @@
             btnBackLevel.onclick = () => { playSound('soundClick'); studentCurrentPath.pop(); renderStudentButtons(); }; optsBox.appendChild(btnBackLevel);
         }
         if(currentLevelItems) {
-            currentItems.forEach((item, index) => {
+            currentLevelItems.forEach((item, index) => {
                 const btn = document.createElement('button'); btn.innerText = item.title;
                 if(item.type === 'folder') { btn.className = "opt-btn folder-btn"; btn.onclick = () => { playSound('soundClick'); studentCurrentPath.push(index); renderStudentButtons(); }; } 
                 else { btn.className = "opt-btn"; btn.onclick = () => { playSound('soundClick'); handleSpecialButtonAction(item); }; }
