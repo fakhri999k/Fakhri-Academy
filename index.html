@@ -242,7 +242,6 @@
 </div>
 
 <script>
-    // إعدادات مشروع Firebase المخصصة لك بالكامل (fakhri-academy)
     const firebaseConfig = {
         apiKey: "AIzaSyDl3IBCCRToCJBGg-G-53TlelCQVhAFhOE",
         authDomain: "fakhri-academy.firebaseapp.com",
@@ -254,11 +253,9 @@
         measurementId: "G-DWRNP247RX"
     };
 
-    // تهيئة Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // البنية الافتراضية الاحتياطية في حال كانت قاعدة البيانات فارغة تماماً عند أول تشغيل
     let academyData = {
         login: { title: "أكاديمية أستاذ فخري الرقمية", desc: "مرحباً بك في المنصة الذكية الآمنة لتجربة تعليمية غامرة." },
         studentAccessCode: "PROF-2026-X83B", 
@@ -289,21 +286,17 @@
 
     function playSound(soundId) { try { const s = document.getElementById(soundId); s.currentTime = 0; s.play(); } catch(e) {} }
 
-    // الاستماع اللحظي لقاعدة بيانات Firebase
     function initFirebaseSync() {
         db.ref('academyData').on('value', (snapshot) => {
             if (snapshot.exists()) {
                 academyData = snapshot.val();
-                // ضمان وجود المصفوفات والحقول الأساسية لمنع الأخطاء البرمجية
                 if(!academyData.subjectsOrder) academyData.subjectsOrder = [];
                 if(!academyData.usedCodes) academyData.usedCodes = [];
                 if(!academyData.devCodes) academyData.devCodes = {};
                 
-                // تحديث واجهة تسجيل الدخول بشكل مباشر من السيرفر
                 document.getElementById('loginHeaderTitle').innerText = academyData.login.title;
                 document.getElementById('loginHeaderDesc').innerText = academyData.login.desc;
                 
-                // تحديث لوحة التحكم إذا كانت مفتوحة
                 const sessionAuth = sessionStorage.getItem('fakhri_authenticated_session');
                 if (sessionAuth === 'admin') {
                     document.getElementById('admStudentCode').value = academyData.studentAccessCode;
@@ -322,7 +315,6 @@
                     renderHubView();
                 }
             } else {
-                // رفع البنية الافتراضية أول مرة إذا كانت الداتابيز فارغة
                 db.ref('academyData').set(academyData);
             }
         });
@@ -534,7 +526,7 @@
                 let imgHtml = ""; 
                 if(b.images && b.images.length > 0) { 
                     imgHtml = `<div class="gallery-container">`; 
-                    b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); 
+                    b.images.forEach(imgUrl => { if(imgUrl && imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); 
                     imgHtml += `</div>`; 
                 }
                 addChatMsg("", 'bot', `<div style="direction:rtl; text-align:right;">${b.content}</div>${imgHtml}`);
@@ -542,7 +534,7 @@
                 addChatMsg("", 'bot', `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" style="color:#2e7d32; font-weight:bold;">📥 فتح ملف PDF</a>`);
             } else if(b.type === 'quiz') {
                 let html = `❓ <b>${b.question}</b><br><br>`; 
-                const validOptions = (b.options || []).filter(o => o.trim() !== '');
+                const validOptions = (b.options || []).filter(o => o && o.trim() !== '');
                 validOptions.forEach(opt => { html += `<button class="quiz-option-btn" onclick="checkQuizAnswer(this, '${opt.trim()}', '${b.correct}')">${opt.trim()}</button>`; });
                 addChatMsg("", 'bot', html);
             }
@@ -605,7 +597,16 @@
         academyData.login.title = document.getElementById('admLoginTitle').value; academyData.login.desc = document.getElementById('admLoginDesc').value;
         academyData.globalMessage = document.getElementById('admGlobalMsg').value; const sub = document.getElementById('admSubject').value;
         if(sub && academyData[sub]) { academyData[sub].robotName = document.getElementById('admRobotName').value; academyData[sub].welcome = document.getElementById('admWelcome').value; }
-        // الرفع السحابي الفوري لـ Firebase
+        
+        // التقاط قيم المحررات النصية النشطة في صفحة الآدمين قبل الرفع
+        const currentItems = getAdminCurrentLevel();
+        currentItems.forEach((b, index) => {
+            if(b.type === 'text') {
+                const editorEl = document.getElementById(`adm_wysiwyg_${index}`);
+                if(editorEl) { b.content = editorEl.innerHTML; }
+            }
+        });
+
         db.ref('academyData').set(academyData).then(() => {
             alert("🎉 تم حفظ ومزامنة كافة التعديلات بنجاح سحابي تام على Firebase!");
         });
@@ -668,7 +669,6 @@
         if(sessionDevSubject && academyData[sessionDevSubject]) {
             academyData[sessionDevSubject].welcome = document.getElementById('devWelcome').value;
         }
-        // الرفع السحابي لمادة الأستاذ المطور فقط دون التأثير على المواد الأخرى
         db.ref('academyData').set(academyData).then(() => {
             if(showAlert) { alert("💾 تم حفظ وتثبيت التعديلات سحابياً على خادم Firebase بنجاح!"); }
         });
@@ -735,7 +735,7 @@
                 let imgHtml = ""; 
                 if(b.images && b.images.length > 0) { 
                     imgHtml = `<div class="gallery-container">`; 
-                    b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); 
+                    b.images.forEach(imgUrl => { if(imgUrl && imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); 
                     imgHtml += `</div>`; 
                 }
                 innerContent = `<div style="direction:rtl; text-align:right;">${b.content}</div>${imgHtml}`;
@@ -743,7 +743,7 @@
                 innerContent = `📄 مستند جاهز:<br><a href="${b.content}" target="_blank" style="color:#2e7d32; font-weight:bold;">📥 فتح ملف PDF</a>`;
             } else if(b.type === 'quiz') {
                 let html = `❓ <b>${b.question}</b><br><br>`; 
-                const validOptions = (b.options || []).filter(o => o.trim() !== '');
+                const validOptions = (b.options || []).filter(o => o && o.trim() !== '');
                 validOptions.forEach(opt => { html += `<button class="quiz-option-btn" disabled>${opt.trim()}</button>`; });
                 innerContent = html;
             }
