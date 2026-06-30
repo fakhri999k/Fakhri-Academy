@@ -17,7 +17,7 @@
         input, textarea, select { -webkit-user-select: text !important; user-select: text !important; box-sizing: border-box; }
         
         .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; text-align: center; }
-        .login-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1596700810795-3642c26f047f?w=1200'); background-size: cover; background-position: center; opacity: 0.65; filter: blur(1px); }
+        .login-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.65; filter: blur(1px); }
         .login-content { position: relative; z-index: 10; color: white; background: rgba(27, 77, 62, 0.75); padding: 35px; border-radius: 16px; backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; }
         
         .login-title { font-size: 28px; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 10px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
@@ -53,12 +53,10 @@
         .opt-btn.folder-btn { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .opt-btn.back-level-btn { background: #ffebee; border-color: #ffcdd2; color: #c62828; }
         
-        /* ضبط الرسائل بحيث تظهر علامة الصح الفسفورية فقط وحصرياً لرسائل المبعوث (المستخدم) */
         .msg { max-width: 82%; padding: 12px 16px 12px 16px; border-radius: 16px; font-size: 15px; line-height: 1.6; word-wrap: break-word; position: relative; }
         .msg.bot { background: #f0f4f1; align-self: flex-start; border-top-left-radius: 2px; color: #2d3748; }
         .msg.user { background: var(--secondary-color); color: white; align-self: flex-end; border-top-right-radius: 2px; padding-bottom: 24px; }
         
-        /* إبقاء علامتي المشاهدة الفسفورية لرسائل المستخدم فقط */
         .msg-ticks { position: absolute; bottom: 4px; right: 14px; font-size: 12px; color: #00ff66; font-weight: bold; letter-spacing: -1px; user-select: none; }
         
         .gallery-container { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
@@ -69,9 +67,9 @@
         .admin-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; }
         .card { background: #f4f7f5; padding: 15px; border: 1px solid #c8e6c9; border-radius: 12px; margin-bottom: 15px; }
         
-        .code-flex-row { display: flex; gap: 10px; margin-top: 10px; }
+        .code-flex-row, .factory-flex-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .code-flex-row button, .factory-flex-row button, .factory-flex-row input { flex: 1; min-width: 140px; }
         .history-list { margin: 10px 0 0 0; padding-right: 20px; font-size: 13px; color: #555; }
-        .factory-flex-row { display: flex; gap: 10px; }
 
         .editor-toolbar { background: #e2e8f0; padding: 6px; border-top-left-radius: 8px; border-top-right-radius: 8px; border: 1px solid #cbd5e0; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
         .editor-btn { background: #fff; border: 1px solid #a0aec0; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
@@ -80,7 +78,6 @@
 
         #shieldScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; color: white; text-align: center; font-size: 20px; padding-top: 20%; }
 
-        /* واجهة الأستاذ المطور المتكاملة */
         .dev-fullscreen-container { display: flex; width: 100%; height: 100vh; height: 100dvh; background: #f4f7f5; position: relative; }
         .dev-panel-main { width: 100%; height: 100%; padding: 15px; overflow-y: auto; box-sizing: border-box; background: white; display: block; }
         .dev-preview-modal { width: 100%; height: 100%; display: none; flex-direction: column; background: var(--chat-bg); position: absolute; top: 0; left: 0; z-index: 9999; }
@@ -95,7 +92,6 @@
 <audio id="soundQuizCorrect" src="https://cdn.pixabay.com/audio/2023/10/16/audio_097f53a5c1.mp3" preload="auto"></audio>
 <audio id="soundQuizWrong" src="https://cdn.pixabay.com/audio/2022/12/15/audio_5f4f89d6e4.mp3" preload="auto"></audio>
 
-<!-- شاشة الدخول الاحترافية -->
 <div id="loginScreen" class="screen">
     <div class="login-bg"></div>
     <div class="login-content">
@@ -112,7 +108,6 @@
     </div>
 </div>
 
-<!-- واجهة تطبيق الطلاب والدروس -->
 <div id="studentApp" class="app-container" style="display:none;">
     <div id="hubScreen" class="hub-screen">
         <div class="hub-header" id="hubMainTitle">
@@ -124,7 +119,6 @@
         <div class="bots-list" id="botsContainerList"></div>
     </div>
 
-    <!-- شاشة المحادثة الكاملة للطلاب -->
     <div id="chatScreen" class="chat-screen" style="display:none;">
         <div class="app-header">
             <div class="robot-head">
@@ -141,7 +135,6 @@
     </div>
 </div>
 
-<!-- واجهة الأستاذ المطور المحدثة والمثبتة تفاصيلها بالكامل -->
 <div id="developerApp" class="dev-fullscreen-container" style="display:none;">
     <div id="devPanelMain" class="dev-panel-main">
         <h2 style="color: var(--primary-color); border-bottom: 2px solid #cbd5e0; padding-bottom: 8px; margin-top:0;">🛠️ لوحة تطوير مادة: <span id="devSubjectTitle" style="color:var(--secondary-color);">...</span></h2>
@@ -167,7 +160,6 @@
         <button onclick="saveDevDataOnly()" class="btn-prime" style="width:100%; background: linear-gradient(135deg, #1b4d3e, #2e7d32); padding: 14px; font-size: 16px;">💾 حفظ وتثبيت تعديلات المادة الحالية فقط</button>
     </div>
     
-    <!-- واجهة تجريب الشات المخصصة للمطورين بملء الشاشة -->
     <div id="devPreviewModal" class="dev-preview-modal">
         <div class="chat-screen">
             <div class="app-header" style="background: var(--secondary-color);">
@@ -179,7 +171,6 @@
                     </div>
                 </div>
                 <div style="display:flex; gap:6px;">
-                    <!-- تم إزالة زر التصفير تماماً بناءً على رغبتك والإبقاء على الرجوع فقط -->
                     <button onclick="closeDevPreviewMode()" class="btn-back" style="background:#d32f2f; border:none;">🔙 رجوع للوحة</button>
                 </div>
             </div>
@@ -189,7 +180,6 @@
     </div>
 </div>
 
-<!-- لوحة التحكم الكاملة للمدير (الأستاذ فخري فقط) -->
 <div id="adminPanel" class="admin-panel">
     <h2 style="color: var(--primary-color); border-bottom: 2px solid #c8e6c9; padding-bottom: 8px;">⚙️ لوحة تحكم المواد والأزرار الشجرية</h2>
     <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:8px 15px; border-radius:6px; float:left; cursor:pointer; font-weight:bold;">قفل الحساب 🔒</button>
@@ -358,9 +348,9 @@
         academyData.subjectsOrder.forEach(sub => {
             const code = academyData.devCodes[sub] || "لا يوجد كود نشط";
             const div = document.createElement('div');
-            div.style = "background:#fff; padding:8px; border:1px solid #cbd5e0; border-radius:6px; display:flex; justify-content:space-between; align-items:center;";
+            div.style = "background:#fff; padding:8px; border:1px solid #cbd5e0; border-radius:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;";
             div.innerHTML = `<div><b>${academyData[sub]?academyData[sub].robotName:sub}:</b> <code style="color:#2e7d32; font-weight:bold;">${code}</code></div>
-            <button onclick="resetDevCode('${sub}')" style="background:#c62828; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 تصفير وإتلاف القديم</button>`;
+            <button onclick="resetDevCode('${sub}')" style="background:#c62828; color:white; border:none; padding:6px 10px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 تصفير وإتلاف القديم</button>`;
             container.appendChild(div);
         });
     }
@@ -513,7 +503,6 @@
         if(sender === 'bot' && !isWelcome) setTimeout(() => { playSound('soundMsgBot'); }, 100);
         const box = document.getElementById('chatContainer'); const div = document.createElement('div'); div.className = `msg ${sender}`;
         
-        // تم إزالة علامتي الصح من رسائل البوت وحصرها في رسائل المستخدم (المبعوث) فقط لمحاكاة الواقع
         const ticksHtml = sender === 'user' ? `<span class="msg-ticks">✓✓</span>` : "";
         
         if(htmlContent) div.innerHTML = htmlContent + ticksHtml; else div.innerHTML = text + ticksHtml; 
@@ -522,7 +511,6 @@
 
     function handleSpecialButtonAction(b) {
         addChatMsg(b.title, 'user');
-        // تعديل زمن الاستجابة إلى 3 ثوانٍ (3000 ملي ثانية) لمحاكاة محادثة واقعية تماماً بناءً على طلبك
         setTimeout(() => {
             if(b.type === 'text') {
                 let imgHtml = ""; if(b.images && b.images.length > 0) { imgHtml = `<div class="gallery-container">`; b.images.forEach(imgUrl => { if(imgUrl.trim()) imgHtml += `<img src="${imgUrl.trim()}">`; }); imgHtml += `</div>`; }
@@ -571,7 +559,7 @@
             else {
                 extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateNodeField(${index}, 'type', this.value); renderAdminTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
-                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="adm_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="admin_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" oninput="updateNodeField(${index}, 'content', this.innerHTML)" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
                 } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`; } 
                 else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`; }
             }
@@ -581,8 +569,8 @@
     }
     function diveIntoAdminFolder(idx) { adminCurrentPathIndices.push(idx); renderAdminTree(); }
     function updateNodeField(idx, field, val) { getAdminCurrentLevel()[idx][field] = val; }
-    function updateNodeImages(idx, val) { getAdminCurrentLevel()[idx].images = val.split(','); }
-    function updateNodeQuizOptions(idx, val) { getAdminCurrentLevel()[idx].options = val.split(','); }
+    function updateNodeImages(idx, val) { getAdminCurrentLevel()[idx].images = val.split(',').map(img => img.trim()); }
+    function updateNodeQuizOptions(idx, val) { getAdminCurrentLevel()[idx].options = val.split(',').map(opt => opt.trim()); }
     function changeNodeType(idx, metaType) { const level = getAdminCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderAdminTree(); }
     function addNodeAtCurrentLevel() { getAdminCurrentLevel().push({ title: "عنصر جديد", type: "folder", children: [] }); renderAdminTree(); }
     function deleteNode(idx) { if(confirm("🗑️ هل أنت متأكد من الحذف؟")) { getAdminCurrentLevel().splice(idx, 1); renderAdminTree(); } }
@@ -593,7 +581,6 @@
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData)); alert("🎉 تم حفظ ونشر كافة التعديلات بنجاح تام للموقع بالكامل!");
     }
 
-    /* دوال إدارة واجهة الأستاذ المطور الفردية الكاملة */
     function getDevCurrentLevel() {
         if(!academyData[sessionDevSubject]) return [];
         let level = academyData[sessionDevSubject].tree; devCurrentPathIndices.forEach(idx => { if(level[idx] && level[idx].children) level = level[idx].children; }); return level;
@@ -619,10 +606,9 @@
         currentItems.forEach((b, index) => {
             const div = document.createElement('div'); div.className = "card"; let extraHtml = "";
             if(b.type === 'folder') { extraHtml = `<button onclick="diveIntoDevFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
-            else {
-                extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateDevNodeField(${index}, 'type', this.value); renderDevTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
+            else {extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateDevNodeField(${index}, 'type', this.value); renderDevTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
-                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="dev_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" onblur="updateDevNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateDevNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="dev_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" oninput="updateDevNodeField(${index}, 'content', this.innerHTML)" onblur="updateDevNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateDevNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
                 } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateDevNodeField(${index}, 'content', this.value)">`; } 
                 else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateDevNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateDevNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateDevNodeField(${index}, 'correct', this.value)">`; }
             }
@@ -633,8 +619,8 @@
 
     function diveIntoDevFolder(idx) { devCurrentPathIndices.push(idx); renderDevTree(); }
     function updateDevNodeField(idx, field, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx][field] = val; }
-    function updateDevNodeImages(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].images = val.split(','); }
-    function updateDevNodeQuizOptions(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].options = val.split(','); }
+    function updateDevNodeImages(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].images = val.split(',').map(img => img.trim()); }
+    function updateDevNodeQuizOptions(idx, val) { if(checkDevTokenValidity()) getDevCurrentLevel()[idx].options = val.split(',').map(opt => opt.trim()); }
     function changeDevNodeType(idx, metaType) { if(!checkDevTokenValidity()) return; const level = getDevCurrentLevel(); level[idx] = metaType === 'folder' ? { title: level[idx].title, type: "folder", children: [] } : { title: level[idx].title, type: "text", content: "", images: [] }; renderDevTree(); }
     
     function addNodeAtCurrentDevLevel() { 
@@ -645,11 +631,9 @@
     
     function deleteDevNode(idx) { if(!checkDevTokenValidity()) return; if(confirm("🗑️ هل أنت متأكد من حذف هذا الزر؟")) { getDevCurrentLevel().splice(idx, 1); renderDevTree(); } }
 
-    /* تم تحديث وتفعيل دالة حفظ بيانات المطور بالكامل لتجمع البيانات من الحقول المفتوحة وتخزنها لحظياً */
     function saveDevDataOnly() {
         if(!checkDevTokenValidity()) return;
         
-        // جلب وتحديث النصوص المفتوحة حالياً داخل المحاور الفرعية في الـ WYSIWYG قبل الحفظ النهائي لضمان عدم ضياعها
         const currentItems = getDevCurrentLevel();
         currentItems.forEach((b, index) => {
             if(b.type === 'text') {
@@ -665,7 +649,6 @@
         alert("💾 تم حفظ وتثبيت تعديلات مادتك ومحتويات الأزرار في قاعدة البيانات الموحدة بنجاح!");
     }
 
-    /* الانتقال إلى وضع المعاينة بملء الشاشة */
     function switchToDevPreviewMode() {
         if(!checkDevTokenValidity()) return;
         document.getElementById('devPanelMain').style.display = 'none';
@@ -673,7 +656,6 @@
         refreshDevChatPreview();
     }
 
-    /* العودة مجدداً للوحة التطوير */
     function closeDevPreviewMode() {
         document.getElementById('devPreviewModal').style.display = 'none';
         document.getElementById('devPanelMain').style.display = 'block';
@@ -685,7 +667,6 @@
         document.getElementById('devHeaderRobotName').innerText = academyData[sessionDevSubject].robotName;
         const box = document.getElementById('devChatContainer'); box.innerHTML = "";
         
-        // بناء رسالة البوت الترحيبية بدون علامات المشاهدة الفسفورية (محاكاة للواقع)
         const div = document.createElement('div'); div.className = "msg bot";
         div.innerHTML = document.getElementById('devWelcome').value;
         box.appendChild(div);
@@ -720,11 +701,9 @@
         const box = document.getElementById('devChatContainer');
         const userDiv = document.createElement('div'); userDiv.className = "msg user"; 
         
-        // إبقاء علامات المشاهدة الفسفورية لرسالة المستخدم المبعوثة فقط
         userDiv.innerHTML = b.title + `<span class="msg-ticks">✓✓</span>`;
         box.appendChild(userDiv); box.scrollTop = box.scrollHeight;
         
-        // إضافة تأخير زمني 3 ثوانٍ (3000 ملي ثانية) لمحاكاة محادثة واقعية تماماً قبل الرد
         setTimeout(() => {
             const botDiv = document.createElement('div'); botDiv.className = "msg bot";
             let innerContent = "";
@@ -738,7 +717,6 @@
                 innerContent = html;
             }
             
-            // رد البوت يظهر نظيفاً بدون أي علامات صح لمحاكاة دردشات الحقيقة
             botDiv.innerHTML = innerContent;
             box.appendChild(botDiv); box.scrollTop = box.scrollHeight;
         }, 3000);
