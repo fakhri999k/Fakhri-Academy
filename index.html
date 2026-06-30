@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fakhri Academy</title>
+    <title>أكاديمية أستاذ فخري الرقمية</title>
     <style>
         :root {
             --primary-color: #1b4d3e;      
@@ -14,7 +14,14 @@
             --text-color: #2d3748;
         }
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; -webkit-user-select: none; user-select: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); }
-        input, textarea, select { -webkit-user-select: text !important; user-select: text !important; box-sizing: border-box; }
+        
+        /* تفعيل السماح باللصق والنسخ بشكل كامل داخل صناديق الإدخال للمدير والمطورين */
+        input, textarea, select { 
+            -webkit-user-select: text !important; 
+            user-select: text !important; 
+            box-sizing: border-box; 
+            pointer-events: auto !important;
+        }
         
         .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; text-align: center; }
         .login-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.65; filter: blur(1px); }
@@ -83,6 +90,7 @@
         .dev-preview-modal { width: 100%; height: 100%; display: none; flex-direction: column; background: var(--chat-bg); position: absolute; top: 0; left: 0; z-index: 9999; }
     </style>
 </head>
+<!-- السماح لجميع حقول المدخلات باستقبال اللصق بشكل طبيعي عبر تمرير الحدث للـ Inputs -->
 <body oncontextmenu="return false;" oncopy="return false;" oncut="return false;">
 
 <div id="shieldScreen">🔒 حماية المحتوى التعليمي مفعّلة بنجاح.</div>
@@ -103,7 +111,7 @@
             تنبيه: هذا الكود يستعمل من أجل تفعيل حسابك فقط!
         </div>
         
-        <input type="password" id="accessCode" class="input-field" placeholder="أدخل كود المرور الخاص بك">
+        <input type="password" id="accessCode" class="input-field" placeholder="أدخل كود المرور الخاص بك" onpaste="event.stopPropagation();">
         <button onclick="handleLogin()" class="btn-prime">فتح المنصة الآن</button>
     </div>
 </div>
@@ -140,7 +148,7 @@
         <h2 style="color: var(--primary-color); border-bottom: 2px solid #cbd5e0; padding-bottom: 8px; margin-top:0;">🛠️ لوحة تطوير مادة: <span id="devSubjectTitle" style="color:var(--secondary-color);">...</span></h2>
         
         <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button onclick="switchToDevPreviewMode()" style="background:var(--secondary-color); color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; flex: 1; font-size:14px; box-shadow:0 3px 6px rgba(0,0,0,0.1);">👁️ تجربة ومعاينة البوت</button>
+            <button onclick="switchToDevPreviewMode()" style="background:var(--secondary-color); color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; flex: 1; font-size:14px; box-shadow:0 3px 6px rgba(0,0,0,0.15);">👁️ تجربة ومعاينة البوت</button>
             <button onclick="logout()" style="background:#d32f2f; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px;">خروج 🔒</button>
         </div>
         
@@ -148,7 +156,7 @@
             <label style="font-weight:bold; color: var(--secondary-color);">🤖 اسم البوت المخصص (معين من قبل الإدارة):</label>
             <input type="text" id="devRobotName" class="admin-input" disabled style="background-color: #e2e8f0; color: #4a5568; cursor: not-allowed; font-weight: bold;">
             <label style="font-weight:bold; margin-top:10px; display:block;">💬 رسالة ترحيب البوت المخصصة:</label>
-            <textarea id="devWelcome" class="admin-input" rows="2"></textarea>
+            <textarea id="devWelcome" class="admin-input" rows="2" onpaste="event.stopPropagation();"></textarea>
         </div>
 
         <div class="card" style="background: #eef2ef;">
@@ -186,7 +194,7 @@
     
     <div class="card" style="border: 2px solid var(--secondary-color); background: #e8f5e9; margin-top: 20px;">
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🔑 كود دخول الطلاب الحالي:</label>
-        <input type="text" id="admStudentCode" class="admin-input" style="font-weight:bold; text-align:center; color:var(--primary-color);" readonly>
+        <input type="text" id="admStudentCode" class="admin-input" style="font-weight:bold; text-align:center; color:var(--primary-color);" readonly onpaste="event.stopPropagation();">
         <div class="code-flex-row">
             <button onclick="generateNewStudentCode()" class="btn-prime" style="margin:0; background:#2e7d32; padding:10px;">🔄 توليد كود جديد</button>
             <button onclick="resetStudentCode()" class="btn-prime" style="margin:0; background:#c62828; padding:10px;">🧹 تصفير الكود</button>
@@ -198,8 +206,8 @@
     <div class="card" style="border: 2px solid #1b4d3e; background: #f0f4f1;">
         <label style="font-weight:bold; color:var(--primary-color); display:block; margin-bottom:5px;">🛠️ مصنع المساعدين والمواد للأساتذة المطورين:</label>
         <div class="factory-flex-row">
-            <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة (مثال: french)" style="margin:0;">
-            <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: مساعد الفرنسي)" style="margin:0;">
+            <input type="text" id="newBotIdInput" class="admin-input" placeholder="معرف المادة (مثال: french)" style="margin:0;" onpaste="event.stopPropagation();">
+            <input type="text" id="newBotNameInput" class="admin-input" placeholder="اسم البوت المعروض (مثل: مساعد الفرنسي)" style="margin:0;" onpaste="event.stopPropagation();">
         </div>
         <button onclick="addNewCustomBotSubject()" class="btn-prime" style="margin-top:8px; padding:10px;">➕ إنشاء وتفعيل المادة فوراً</button>
         
@@ -211,9 +219,9 @@
 
     <div class="card">
         <label style="font-weight:bold; color:var(--primary-color);">📢 نصوص المنصة العامة:</label>
-        <input type="text" id="admLoginTitle" class="admin-input" placeholder="عنوان صفحة الدخول">
-        <input type="text" id="admLoginDesc" class="admin-input" placeholder="وصف صفحة الدخول">
-        <textarea id="admGlobalMsg" class="admin-input" rows="2" placeholder="الرسالة الترحيبية العامة"></textarea>
+        <input type="text" id="admLoginTitle" class="admin-input" placeholder="عنوان صفحة الدخول" onpaste="event.stopPropagation();">
+        <input type="text" id="admLoginDesc" class="admin-input" placeholder="وصف صفحة الدخول" onpaste="event.stopPropagation();">
+        <textarea id="admGlobalMsg" class="admin-input" rows="2" placeholder="الرسالة الترحيبية العامة" onpaste="event.stopPropagation();"></textarea>
     </div>
 
     <label style="font-weight:bold; display:block; margin-top:15px;">1. حدد المادة لتخصيص هيكلها بالكامل:</label>
@@ -221,9 +229,9 @@
 
     <div class="card">
         <label style="font-weight:bold; color: #2e7d32;">🤖 تخصيص اسم هذا البوت (أنت الوحيد المخول بتغييره):</label>
-        <input type="text" id="admRobotName" class="admin-input">
+        <input type="text" id="admRobotName" class="admin-input" onpaste="event.stopPropagation();">
         <label style="font-weight:bold;">💬 رسالة ترحيب البوت المخصصة:</label>
-        <textarea id="admWelcome" class="admin-input" rows="2"></textarea>
+        <textarea id="admWelcome" class="admin-input" rows="2" onpaste="event.stopPropagation();"></textarea>
         <button onclick="deleteCurrentBotSubject()" style="background:#ffcdd2; color:#b71c1c; border:none; padding:6px 12px; border-radius:6px; margin-top:10px; font-weight:bold; cursor:pointer; width:100%;">🗑️ حذف هذه المادة بالكامل</button>
     </div>
 
@@ -356,7 +364,7 @@
     }
 
     function resetDevCode(sub) {
-        if(!confirm(`⚠️ هل أنت متأكد من إتلاف رمز الأستاذ الحالي لبوت (${sub}) وتوليد رمز جديد وطرد الحالي Simon؟`)) return;
+        if(!confirm(`⚠️ هل أنت متأكد من إتلاف رمز الأستاذ الحالي لبوت (${sub}) وتوليد رمز جديد وطرد الحالي؟`)) return;
         const rand = Math.floor(1000 + Math.random() * 9000);
         academyData.devCodes[sub] = `DEV-${sub.toUpperCase()}-${rand}`;
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
@@ -558,11 +566,11 @@
             else {
                 extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateNodeField(${index}, 'type', this.value); renderAdminTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
-                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="admin_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" oninput="updateNodeField(${index}, 'content', this.innerHTML)" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
-                } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`; } 
-                else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`; }
+                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="admin_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" oninput="updateNodeField(${index}, 'content', this.innerHTML)" onblur="updateNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onpaste="event.stopPropagation();" onchange="updateNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.content || ''}" onchange="updateNodeField(${index}, 'content', this.value)">`; } 
+                else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.question || ''}" onchange="updateNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.options ? b.options.join(',') : ''}" onchange="updateNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.correct || ''}" onchange="updateNodeField(${index}, 'correct', this.value)">`; }
             }
-            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
+            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.title}" onchange="updateNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
             container.appendChild(div);
         });
     }
@@ -607,11 +615,11 @@
             if(b.type === 'folder') { extraHtml = `<button onclick="diveIntoDevFolder(${index})" style="background:var(--primary-color); color:white; border:none; padding:8px; border-radius:6px; width:100%; margin-top:8px; cursor:pointer; font-weight:bold;">📥 دخول بداخل المحور (${b.children ? b.children.length : 0})</button>`; } 
             else {extraHtml = `<label>نوع التفاعل:</label><select class="admin-input" onchange="updateDevNodeField(${index}, 'type', this.value); renderDevTree();"><option value="text" ${b.type==='text'?'selected':''}>نص شرح + صور متتالية</option><option value="pdf" ${b.type==='pdf'?'selected':''}>رابط ملف PDF مباشر</option><option value="quiz" ${b.type==='quiz'?'selected':''}>سؤال كويز تفاعلي</option></select>`;
                 if(b.type === 'text') {
-                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="dev_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" oninput="updateDevNodeField(${index}, 'content', this.innerHTML)" onblur="updateDevNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onchange="updateDevNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
-                } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" value="${b.content || ''}" onchange="updateDevNodeField(${index}, 'content', this.value)">`; } 
-                else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" value="${b.question || ''}" onchange="updateDevNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" value="${b.options ? b.options.join(',') : ''}" onchange="updateDevNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" value="${b.correct || ''}" onchange="updateDevNodeField(${index}, 'correct', this.value)">`; }
+                    extraHtml += `<div class="editor-toolbar"><button type="button" class="editor-btn" onclick="execEditorCmd('bold')">B</button><button type="button" class="editor-btn" onclick="execEditorCmd('italic')">I</button><button type="button" class="editor-btn" onclick="execEditorCmd('underline')">U</button><select class="editor-select" onchange="execEditorCmd('fontSize', this.value)"><option value="3">حجم عادي</option><option value="4">متوسط</option><option value="5">كبير</option></select><select class="editor-select" onchange="execEditorCmd('foreColor', this.value)"><option value="#2d3748">تلقائي</option><option value="#d32f2f">أحمر 🔴</option><option value="#0056b3">أزرق 🔵</option><option value="#2e7d32">أخضر 🟢</option></select></div><div id="dev_wysiwyg_${index}" class="wysiwyg-editor" contenteditable="true" oninput="updateDevNodeField(${index}, 'content', this.innerHTML)" onblur="updateDevNodeField(${index}, 'content', this.innerHTML)">${b.content || ''}</div><label>روابط الصور متبوعة بفاصلة ( , ):</label><textarea class="admin-input" rows="2" onpaste="event.stopPropagation();" onchange="updateDevNodeImages(${index}, this.value)">${b.images ? b.images.join(',') : ''}</textarea>`;
+                } else if(b.type === 'pdf') { extraHtml += `<label>رابط الـ PDF المباشر:</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.content || ''}" onchange="updateDevNodeField(${index}, 'content', this.value)">`; } 
+                else if(b.type === 'quiz') { extraHtml += `<label>نص السؤال:</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.question || ''}" onchange="updateDevNodeField(${index}, 'question', this.value)"><label>الخيارات (بفاصلة ,):</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.options ? b.options.join(',') : ''}" onchange="updateDevNodeQuizOptions(${index}, this.value)"><label>الإجابة الصحيحة:</label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.correct || ''}" onchange="updateDevNodeField(${index}, 'correct', this.value)">`; }
             }
-            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" value="${b.title}" onchange="updateDevNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeDevNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteDevNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
+            div.innerHTML = `<label><b>اسم الزر:</b></label><input type="text" class="admin-input" onpaste="event.stopPropagation();" value="${b.title}" onchange="updateDevNodeField(${index}, 'title', this.value)"><label><b>بنية الزر:</b></label><select class="admin-input" onchange="changeDevNodeType(${index}, this.value)"><option value="folder" ${b.type==='folder'?'selected':''}>📁 محور عام</option><option value="special" ${b.type!=='folder'?'selected':''}>🎯 زر خاص</option></select>${extraHtml}<button onclick="deleteDevNode(${index})" style="background:#ffcdd2; color:#b71c1c; border:none; padding:8px; border-radius:6px; margin-top:10px; cursor:pointer; font-weight:bold; width:100%;">🗑️ حذف الزر</button>`;
             container.appendChild(div);
         });
     }
@@ -645,7 +653,7 @@
             academyData[sessionDevSubject].welcome = document.getElementById('devWelcome').value;
         }
         localStorage.setItem('fakhri_annual_secure_db', JSON.stringify(academyData));
-        alert("💾 تم حفظ وتثبيت تعديلات مادتك ومحتويات الأزرار في قاعدة البيانات الموحدة بنجاح!");
+        alert("💾 تم حفظ وتثبيت تعديلات مادتك ومحتويات الأزر في قاعدة البيانات الموحدة بنجاح!");
     }
 
     function switchToDevPreviewMode() {
